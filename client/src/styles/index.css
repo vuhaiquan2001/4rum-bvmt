@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap');
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --primary-bg-color: #62ac00;
+  --primary-header-color: #84dc00;
+  --sub-bg-color: #f7ffba;
+  --text-color: #203e00;
+  --sub-text-color: #2d5800;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+#root {
+  height: 100%;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: var(--primary-bg-color);
+}
