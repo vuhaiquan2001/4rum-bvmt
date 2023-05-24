@@ -15,23 +15,27 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(password !== repassword){
-      setErr('Nhập lại mật khẩu không khớp')
-    } else{
-      axios.post(`/api/register`, { email: username, password: password})
-      .then(res => {
-        if(res.data.message){
-          setErr(res.data.message)
-        } else {
-          setToast(true);
-          setTimeout(() => {
-            localStorage.setItem("userinfo", JSON.stringify(...res.data));
-            dispatch(action.setUser(...res.data));
-            navigate('/')
-          }, 1000);
-        }
-      })
-    }   
+    if(password.length <= 5){
+      setErr('Mật khẩu phải nhiều hơn 5 kí tự')
+    } else {
+      if(password !== repassword){
+        setErr('Nhập lại mật khẩu không khớp')
+      } else{
+        axios.post(`/api/register`, { email: username, password: password})
+        .then(res => {
+          if(res.data.message){
+            setErr(res.data.message)
+          } else {
+            setToast(true);
+            setTimeout(() => {
+              localStorage.setItem("userinfo", JSON.stringify(...res.data));
+              dispatch(action.setUser(...res.data));
+              navigate('/')
+            }, 1000);
+          }
+        })
+      }   
+    }
   }
   return (
     <div className='flex justify-center w-screen mt-10'>

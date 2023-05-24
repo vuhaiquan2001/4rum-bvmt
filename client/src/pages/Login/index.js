@@ -10,12 +10,13 @@ function Login() {
   const [, dispatch] = useStore();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-      axios.post(`/api/login`, { email: email, password: password})
+       await axios.post(`/api/login`, { email: email, password: password})
       .then(res => {
-        if(res.data.errors){
-          setErr(res.data.errors)
+        if(res.data.message){
+          setErr(res.data.message)
+          console.log(res.data)
         } else {
           localStorage.setItem("userinfo", JSON.stringify(...res.data));
           dispatch(action.setUser(...res.data));
@@ -30,7 +31,7 @@ function Login() {
   }, [navigate])
 
   return (
-    <div className='flex justify-center w-screen mt-10'>
+    <div className='flex min-h-[625px] justify-center w-screen mt-10'>
       <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#84dc00] justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-10 w-auto"  src={require("../../assets/logo/bvmtLogo.png")} alt="Logo"/>

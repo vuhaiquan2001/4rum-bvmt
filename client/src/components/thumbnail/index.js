@@ -10,7 +10,6 @@ function PostThumb({post}) {
     useEffect(() => {
        post.tags ? setTags(post.tags.split(',')) : setTags(['Không có tag'])
     }, [post.tags])
-    console.log(post.postthumb)
     const onerrImg = (e)=>{
         e.target.src = icons.defaultImg
     }

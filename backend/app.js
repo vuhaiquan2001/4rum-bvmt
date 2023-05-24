@@ -100,20 +100,23 @@ const connection = mysql.createConnection({
   app.post('/api/login', async (req, res) => {
     const {email,password}=req.body;
     connection.query('select password from users where useremail=?', email,(err, rs)=>{
-      if(err) throw err;
-      const sql = "SELECT * FROM users where useremail =? and password =?";
-      bcrypt.compare(password, JSON.parse(JSON.stringify(rs))[0].password).then(function(iscorrect) {
-      
-      if(iscorrect){
-        connection.query(sql, [email, JSON.parse(JSON.stringify(rs))[0].password],(err, results) =>{
-          if (results){
-            res.json(results);
-          } else {res.json({errors: 'Thông tin đăng nhập sai!'});}
-        });
-      } else{
-        res.json({err: 'Mật khẩu không đúng'})
+      if(rs.length>0){
+        const sql = "SELECT * FROM users where useremail =? and password =?";
+        bcrypt.compare(password, JSON.parse(JSON.stringify(rs))[0].password).then(function(iscorrect) {   
+          if(iscorrect){
+            connection.query(sql, [email, JSON.parse(JSON.stringify(rs))[0].password],(err, results) =>{
+              if (results){
+                res.json(results);
+              } else {
+                res.json({message: err});}
+            });
+          } else{
+            res.json({message: 'Mật khẩu không chính xác'})
+          }
+        })
+      } else {
+        res.json({message: 'Email không tồn tại'})
       }
-    })
     })
   })
 
@@ -169,7 +172,7 @@ const connection = mysql.createConnection({
           }  
         });
   })
-
+  // PATCH API
   app.patch('/api/updatepost', (req, res) => {
     const {posttitle, idpost, postdesc, postthumb, tags}=req.body;
     const postupdate = moment().format("yyyy-MM-DD");
@@ -183,5 +186,13 @@ const connection = mysql.createConnection({
           }  
         });
   })
-
+  //DELETE API
+  app.get('/api/deletepost/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "Delete from posts where idpost=?";
+    connection.query(sql, id,(err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+  })
 app.listen(4000, () => console.log('App listening on port 4000'));

@@ -7,13 +7,16 @@ import Moment from 'moment';
 import { useStore } from '../../store';
 
 import { firstLetterUppercase } from '../FirstLetterUppercase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function PostBody({post, myRef}) {
     const executeScroll = () => myRef.current.scrollIntoView()
     const [isOwner, setIsOwner] = useState(false)
     const [menuactive, setMenuActice] = useState(false)
     const [state, ] = useStore();
+    const navigate = useNavigate()
+
     useEffect(()=>{
         if(post.iduser === state.users.iduser || state.users.usertitle === 'admin'){
             setIsOwner(true)
@@ -22,10 +25,12 @@ function PostBody({post, myRef}) {
         }
     },[post.iduser, state])
 
-    const handleDeletePost =()=>{
+    const handleDeletePost = async()=>{
         const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
         if (answer) {
-        
+            await axios.get(`/api/deletepost/${post.idpost}`).then((response) => {
+                navigate('/')
+              })
         }
     }
 
