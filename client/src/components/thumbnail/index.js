@@ -3,17 +3,23 @@ import { firstLetterUppercase } from '../../components/FirstLetterUppercase';
 import Moment from "moment";
 import { Link } from 'react-router-dom';
 import {BiTime} from 'react-icons/bi';
+import icons from '../../assets/icons';
 
 function PostThumb({post}) {
     const [tags, setTags] = useState([]);  
     useEffect(() => {
        post.tags ? setTags(post.tags.split(',')) : setTags(['Không có tag'])
     }, [post.tags])
+    console.log(post.postthumb)
+    const onerrImg = (e)=>{
+        e.target.src = icons.defaultImg
+    }
   return (
     <div className='h-48 relative text-2xl mb-4 rounded w-full border-[1px] bg-[#74ac21] shadow-xl'>
         {post.postthumb !== ''?<img 
+                
                 className='w-full h-full object-cover object-center rounded blur-[2px] opacity-60'
-                src={post.postthumb} alt='thumnail'/>:<React.Fragment/>}
+                src={post.postthumb} onError={(e)=>onerrImg(e)} alt='thumnail'/>:<React.Fragment/>}
         <div className='absolute top-2 left-2'>
             <div className='flex flex-1 flex-col px-2'>
                 <div className='h-8 max-w-full overflow-hidden text-ellipsis'>

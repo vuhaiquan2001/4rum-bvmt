@@ -22,7 +22,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    var answer = window.confirm("Bạn có chắc muốn đăng xuất");
+    const answer = window.confirm("Bạn có chắc muốn đăng xuất");
     if (answer) {
       dispatch(action.setUser({}));
       localStorage.removeItem("userinfo"); 
@@ -71,7 +71,7 @@ export default function Header() {
         </div>
       </div>
 
-      <Link to='/create' className="flex ml-2 justify-between">
+      <Link to='/createpost' className="flex ml-2 justify-between">
         <div className="flex group flex-1 py-2 px-3 border-[1px] justify-between border-slate-200 rounded">   
             <IoCreate className="text-xl font-bold text-green-900 ml-1 group-hover:text-[#f2ffde] group-hover:text-2xl"/>
         </div>

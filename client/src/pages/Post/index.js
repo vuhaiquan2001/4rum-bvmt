@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import PostBody from '../../components/postdesc';
 import ReplyBody from '../../components/replyBody';
 import PostThumb from '../../components/thumbnail';
-import CommentEditor from '../../components/CommentEditor/PostEditor';
+import CommentEditor from '../../components/CommentEditor/commentEditor';
 
 import axios from "axios";
 

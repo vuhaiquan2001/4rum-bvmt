@@ -21,6 +21,7 @@ const PostEditor = () => {
   const [user, setUser] = useState({});
   const [imgUrl, setImgUrl]=useState('');
   const [openPreview, setopenPreview]=useState(false);
+  const [isupLoad, setisupLoad]=useState(false);
   const [title, setTitle]=useState('');
   const [tags, setTags]=useState('');
   const [obj, setObj]=useState({});
@@ -31,9 +32,7 @@ const PostEditor = () => {
   const [isSuccess, setisSuccess]= useState(false);
   const [isDanger, setisDanger]= useState(false);
 
-
   const navigate = useNavigate();
-
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("userinfo")))
     axios.get('/api/topics').then((response) => {
@@ -47,6 +46,7 @@ const PostEditor = () => {
   }, [title, imgUrl, tags])
 
   const handleUpPost = async() =>{
+    setisupLoad(true)
     if(title === '' || imgUrl ===''){
       console.log('vui lòng nhập đầy đủ')
       setisDanger(true)
@@ -62,7 +62,7 @@ const PostEditor = () => {
         iduser: user.iduser,
         tags: tags,
       }
-      axios.post(`/api/uppost`, postdata)
+      await axios.post(`/api/uppost`, postdata)
         .then(res => {
           if(res.data.message){
             console.log(res.data.message)
@@ -81,7 +81,7 @@ const PostEditor = () => {
         })
     }
   }
-
+  
   const editor = useEditor({
     extensions: [StarterKit.configure({
 
@@ -96,6 +96,7 @@ const PostEditor = () => {
     
     onUpdate: ({ editor }) => {
       sethtml(editor.getHTML())
+      console.log(editor.getHTML())
       // send the content to an API here
     },
   })
@@ -117,8 +118,8 @@ const PostEditor = () => {
                 ))
               }
             </select> : 
-            <select defaultValue={2} onChange={(e)=>setIdtopic(e.target.value)} className='p-2 rounded mr-2 bg-[#7cb526] border-[1px] border-green-300'>
-              <option disabled>Chọn chủ đề</option>
+            <select defaultValue={1} onChange={(e)=>setIdtopic(e.target.value)} className='p-2 rounded mr-2 bg-[#7cb526] border-[1px] border-green-300'>
+              <option hidden disabled value={1}>Chọn chủ đề</option>
             {
               topics.map((topic) => {
                 if(topic.idtopic !== 1){
@@ -132,7 +133,7 @@ const PostEditor = () => {
           </div>
           <div className='flex'>
             <button onClick={()=>setopenPreview(!openPreview)} className='p-1 mr-2 border-[1px] rounded border-green-300'>Preview</button>
-            <button onClick={()=>handleUpPost()} className='p-1 border-[1px] rounded border-green-300'>Đăng bài</button>
+            <button onClick={()=>handleUpPost()} disabled={isupLoad} className='p-1 border-[1px] rounded border-green-300'>Đăng bài</button>
           </div>
       </div>
       {openPreview? 

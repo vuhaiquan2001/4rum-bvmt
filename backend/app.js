@@ -146,9 +146,8 @@ const connection = mysql.createConnection({
     const viewquantity = 0;
     const commentquantity = 0;
       const sql = "Insert into posts (posttitle, idtopic, postdesc, ngaytao, likequantity, viewquantity, commentquantity, postthumb, iduser, tags) values (?,?,?,?,?,?,?,?,?,?)";
-        const rows = connection.query(sql, [posttitle, idtopic, postdesc, ngaytao, likequantity, viewquantity, commentquantity, postthumb, iduser, tags],(err, results) =>{
+        connection.query(sql, [posttitle, idtopic, postdesc, ngaytao, likequantity, viewquantity, commentquantity, postthumb, iduser, tags],(err, results) =>{
           if(results){
-            console.log(rows)
               res.send(results) 
           } else{
             res.json({message: err})
@@ -162,10 +161,23 @@ const connection = mysql.createConnection({
     const rereply = JSON.stringify(replyref)
     const replylike = 0;
       const sql = "Insert into replys (idpost, iduser, replydesc, replydate, replyref, replylike) values (?,?,?,?,?,?)";
-        const rows = connection.query(sql, [idpost, iduser, replydesc, replydate, rereply, replylike],(err, results) =>{
+        connection.query(sql, [idpost, iduser, replydesc, replydate, rereply, replylike],(err, results) =>{
           if(results){
-            console.log(rows)
               res.send(results) 
+          } else{
+            res.json({message: err})
+          }  
+        });
+  })
+
+  app.patch('/api/updatepost', (req, res) => {
+    const {posttitle, idpost, postdesc, postthumb, tags}=req.body;
+    const postupdate = moment().format("yyyy-MM-DD");
+      const sql = "Update posts set posttitle=?, postdesc=?, postthumb=?, tags=?, postupdate=? where idpost=? ";
+        connection.query(sql, [posttitle, postdesc, postthumb, tags, postupdate, idpost],(err, results) =>{
+          if(results){
+              res.send(results) 
+              console.log(results)
           } else{
             res.json({message: err})
           }  

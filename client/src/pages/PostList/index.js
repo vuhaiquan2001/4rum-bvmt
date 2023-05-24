@@ -12,7 +12,7 @@ function PostList() {
   const [posts, setPosts] = useState([]);
   const [topics, setTopics] = useState([]);
   const [currentpage, setCurrentPage] = useState(1);
-  const [postperpage, ] = useState(2);
+  const [postperpage, ] = useState(10);
   const {idtopic} = useParams();
   
   useEffect(() => {

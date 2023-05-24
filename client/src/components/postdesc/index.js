@@ -21,6 +21,14 @@ function PostBody({post, myRef}) {
             setIsOwner(false)
         }
     },[post.iduser, state])
+
+    const handleDeletePost =()=>{
+        const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
+        if (answer) {
+        
+        }
+    }
+
   return (
     <div className='flex text-2xl mb-4 rounded w-full border-[1px] bg-[#83cc15] shadow-xl'>
         <div className='flex flex-col p-2 w-40 justify-start items-center'>
@@ -45,19 +53,19 @@ function PostBody({post, myRef}) {
         </div>
 
         <div className='flex flex-col flex-1 justify-between items-center border-l-[1px] p-2'>
-            <div className='flex justify-between items-center w-full my-1 text-sm text-[#e3e63f]'>
+            <div className='flex justify-between items-center w-full my-1 text-sm text-[#e3e63f] select-none'>
                 <div className='flex underline hover:text-[#fdff83]'>
                     <BiTime className='w-5 h-5 mr-1'/>
                     {Moment(post.ngaytao).format("DD-MM-YYYY")}
                 </div>
-                <div className='flex'>
+                <div className='flex '>
                     <FaBookmark className='hover:text-[#fdff83]'/>
-                    <FaShare className='mx-2 hover:text-[#fdff83]'/>
-                    {isOwner?<div onClick={()=>setMenuActice(!menuactive)} className={`relative group ${menuactive? 'text-[#fdff83]':'hover:text-[#fdff83]'} `}>
+                    <FaShare className='ml-2 hover:text-[#fdff83]'/>
+                    {isOwner?<div onClick={()=>setMenuActice(!menuactive)} className={`relative cursor-pointer px-2 group ${menuactive? 'text-[#fdff83]':'hover:text-[#fdff83]'} `}>
                         <FaEllipsisV/>
-                        <div className={`absolute bg-white w-28 ${menuactive? 'flex':'group-hover:flex hidden'}`} >
-                            <div className=''>Xóa</div>
-                            <Link>Sửa</Link>
+                        <div className={`absolute text-gray-600 bg-white w-28 ${menuactive? 'flex':'group-hover:flex hidden'} flex-col`} >
+                            <div onClick={()=>handleDeletePost()} className='border-b-[1px]'>Xóa</div>
+                            <Link to={`/updatepost/${post.idpost}`} className=''>Sửa</Link>
                         </div>
                     </div>:<></>}
                 </div>
