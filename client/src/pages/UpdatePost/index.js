@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useStore } from '../../store';
 import { useParams } from 'react-router-dom';
 import UpdatePostEditor from '../../components/UpdatePostEditor/UpdatePostEditor';
@@ -14,7 +14,7 @@ function UpdatePost() {
 
     useEffect(() => {    
         async function fetchData() {
-            await axios.get(`/api/postuserbyidpost/${idpost}`).then((response) => {
+            await axios.get(`/api/postdetail/${idpost}`).then((response) => {
                 setPost(...response.data)
               })
             setIsLoading(false);

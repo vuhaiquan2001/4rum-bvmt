@@ -28,7 +28,7 @@ function Post() {
     }, [])
 
     const fetchPost = async (idpost) => {
-      await axios.get(`/api/postuserbyidpost/${idpost}`).then((response) => {
+      await axios.get(`/api/postdetail/${idpost}`).then((response) => {
         setPost(...response.data);
       });
       setisLoading(false)

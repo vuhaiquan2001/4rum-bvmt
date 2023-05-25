@@ -9,7 +9,6 @@ import Underline from '@tiptap/extension-underline'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 
-import React, {useState, useEffect} from 'react'
 const CommentEditor = ({setdata}) => {
   const cmteditor = useEditor({
     extensions: [StarterKit.configure({

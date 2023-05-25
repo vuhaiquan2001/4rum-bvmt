@@ -65,13 +65,12 @@ const PostEditor = () => {
       await axios.post(`/api/uppost`, postdata)
         .then(res => {
           if(res.data.message){
-            console.log(res.data.message)
             setisDanger(true)
             setTimeout(() => {
               setisDanger(false)
+              setisupLoad(false)
             }, 1000);   
           } else {
-            console.log(res.data.insertId)
             setisSuccess(true)
             setTimeout(() => {
               setisSuccess(false)
@@ -96,7 +95,6 @@ const PostEditor = () => {
     
     onUpdate: ({ editor }) => {
       sethtml(editor.getHTML())
-      console.log(editor.getHTML())
       // send the content to an API here
     },
   })
@@ -111,7 +109,8 @@ const PostEditor = () => {
             <div className='mr-2'>Tags<input type='text' value={tags} className='ml-1 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setTags(e.target.value)} placeholder='Split by ,' /></div>
             {
               user.usertitle ==='admin' ? 
-              <select defaultValue={1} onChange={(e)=>setIdtopic(e.target.value)} className='p-2 rounded mr-2 bg-[#7cb526] border-[1px] border-green-300'>
+              <select defaultValue={'default'} onChange={(e)=>setIdtopic(e.target.value)} className='p-2 rounded mr-2 bg-[#7cb526] border-[1px] border-green-300'>
+              <option hidden disabled value={'default'}>Chọn chủ đề</option>
               {
                 topics.map((topic)=>(
                   <option key={topic.idtopic} value={topic.idtopic}>{topic.topicname}</option>

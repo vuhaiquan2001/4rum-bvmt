@@ -24,6 +24,7 @@ const connection = mysql.createConnection({
   });
   
 //API GET DATA
+  //lấy ra tất cả topic
   app.get('/api/topics', (req, res) => {
   var sql = "SELECT * FROM topics";
   connection.query(sql, (err, results) =>{
@@ -31,7 +32,7 @@ const connection = mysql.createConnection({
     res.json(results);
   });
   });
-
+  // lấy ra topic theo idtopic
   app.get('/api/topics/:id', (req, res) => {
     const {id}= req.params;
     var sql = "SELECT * FROM topics where idtopic =?";
@@ -41,25 +42,25 @@ const connection = mysql.createConnection({
     });
     });
 
-
-  app.get('/api/post/:id', (req, res) => {
+  //api cho chi tiết bài viết theo id bài viết
+  app.get('/api/postdetail/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM posts where idpost=?";
+    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idpost=?";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
     });
   })
-
+  //lấy ra detail user theo id user
   app.get('/api/user/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM users where iduser=?";
+    const sql = "SELECT * FROM user_detail where iduser=?";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
     });
   })
-
+  // lấy ra detail user bằng email
   app.get('/api/useremail/:email', (req, res) => {
     const {email}= req.params;
     const sql = "SELECT * FROM users where useremail=?";
@@ -68,19 +69,10 @@ const connection = mysql.createConnection({
       res.json(results);
     });
   })
-
+  //lấy api user và post cho post list theo topic
   app.get('/api/userpost/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM posts, users where posts.iduser=users.iduser and idtopic=?";
-    connection.query(sql, id,(err, results) =>{
-      if (err) throw err;
-      res.json(results);
-    });
-  })
-
-  app.get('/api/postuserbyidpost/:id', (req, res) => {
-    const {id}= req.params;
-    const sql = "SELECT * FROM posts, users where posts.iduser=users.iduser and idpost=?";
+    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=?";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -89,7 +81,7 @@ const connection = mysql.createConnection({
 
   app.get('/api/reply/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM replys, users where replys.iduser=users.iduser and idpost=? order by replys.replydate";
+    const sql = "SELECT * FROM replys, user_detail where replys.iduser=user_detail.iduser and idpost=?";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -106,7 +98,14 @@ const connection = mysql.createConnection({
           if(iscorrect){
             connection.query(sql, [email, JSON.parse(JSON.stringify(rs))[0].password],(err, results) =>{
               if (results){
-                res.json(results);
+                const userdata=JSON.parse(JSON.stringify(results))[0].iduser
+                connection.query("select * from user_detail where iduser=?", userdata, (err, rs)=>{
+                  if(rs){
+                    res.json(rs)
+                  } else{
+                    res.json({message: "Đã có vấn đề sảy ra @@!"})
+                  }
+                })
               } else {
                 res.json({message: err});}
             });
@@ -124,17 +123,32 @@ const connection = mysql.createConnection({
     const {email,password}=req.body;
     const joindate = moment().format("yyyy-MM-DD");
     const username = 'user'+Math.random().toString().slice(2);
-    const usertitle = 'member'
+    const usertitle = 'member';
+    const userdesc = '';
     const useravatar = 'https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg'
+    const usercoverimg = 'https://cdn.metatft.com/file/metatft/home/set7_bg.webp';
+    const isban = 0;
+    const ischatban = 0;
     bcrypt.hash(password, 10)
     .then(function(hash) {
-      const sql = "Insert into users (username, password, useremail, joindate, usertitle, useravatar) values (?,?,?,?,?,?)";
-        connection.query(sql, [username, hash, email, joindate, usertitle, useravatar],(err, results) =>{
+      const sql = "Insert into users (useremail, password) values (?,?)";
+        connection.query(sql, [email, hash],(err, results) =>{
           if(results){
-            const sql2 = "SELECT * FROM users where useremail=?";
-            connection.query(sql2, email,(err, rs)=>(
-              res.send(rs)
-            ))
+            const sql2 = "Insert into user_detail (iduser, username, joindate, usertitle, useravatar, usercoverimg, isban, ischatban, userdesc) values (?,?,?,?,?,?,?,?,?)";
+            console.log(results.insertId)
+            connection.query(sql2, [results.insertId, username, joindate, usertitle, useravatar, usercoverimg, isban, ischatban, userdesc], (err2, rs)=>{
+              if(rs){
+                connection.query("select * from user_detail where iduser_detail=?", rs.insertId, (err, rs)=>{
+                  if(rs){
+                    res.json(rs)
+                  } else {
+                    res.json({message: "Có sự cố sảy ra @@!"})
+                  }
+                })
+              } else {
+                res.json({message: "Có sự cố sảy ra @@!"})
+              }
+            })
           } else{
             res.json({message: "Email đã tồn tại!"})
           }  

@@ -6,7 +6,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import CreatePost from "../pages/createPost";
 import UpdatePost from "../pages/UpdatePost";
-
+import Profile from "../pages/profile";
 const publicRoutes = [
   { path: "/", component: Home },
   { path: "/postlist/:idtopic", component: PostList },
@@ -14,6 +14,7 @@ const publicRoutes = [
   { path: "/login", component: Login },
   { path: "/register", component: Register },
   { path: "/createpost", component: CreatePost },
+  { path: "/profile", component: Profile },
   { path: "/updatepost/:idpost", component: UpdatePost },
   { path: "*", component: NotFound },
 ];

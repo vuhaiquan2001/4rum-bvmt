@@ -63,6 +63,7 @@ const UpdatePostEditor = ({post}) => {
             setisSuccess(true)
             setTimeout(() => {
               setisSuccess(false)
+              navigate(`/post/${post.idpost}`)
             }, 1000);   
           }
         })
