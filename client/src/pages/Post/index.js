@@ -1,15 +1,16 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PostBody from '../../components/postdesc';
 import ReplyBody from '../../components/replyBody';
 import PostThumb from '../../components/thumbnail';
 import CommentEditor from '../../components/CommentEditor/commentEditor';
-
+import { useStore } from '../../store';
 import axios from "axios";
 
 
 function Post() {
     const {idpost} = useParams();
+    const [state,]=useStore();
     const [post, setPost] = useState({});
     const [isLoading, setisLoading] = useState(true);
     const [comment, setComment] = useState();
@@ -42,7 +43,7 @@ function Post() {
       if(replyRef){
         const commentData = {
           idpost: idpost,
-          iduser: JSON.parse(localStorage.getItem("userinfo")).iduser,
+          iduser: state.users.iduser,
           replydesc: comment,
           replyref: {
             iduserref: replyRef.iduser,
@@ -62,7 +63,7 @@ function Post() {
       } else {
         const commentData = {
           idpost: idpost,
-          iduser: JSON.parse(localStorage.getItem("userinfo")).iduser,
+          iduser: state.users.iduser,
           replydesc: comment,
           replyref: {}
         }
@@ -96,8 +97,11 @@ function Post() {
           <ReplyBody key={reRender} setdata={getReplyRef} myRef={scrollRef}/>
         </React.Fragment>
       }
+      {
+      state.users.iduser?
       <div className='text-lg my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
-        {replyRef? <div className='bg-gray-100 p-1 mb-1 flex'>
+        {replyRef? 
+          <div className='bg-gray-100 p-1 mb-1 flex'>
           <div className='text-lg w-24 overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{replyRef.username}</div>
           <div className='flex flex-1'>: <div dangerouslySetInnerHTML={{__html: replyRef.replydesc}}></div></div>
           <div onClick={()=>setreplyRef()} className='flex justify-center w-11 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy</div>
@@ -106,7 +110,11 @@ function Post() {
         <button
         onClick={()=>handleSend()}
         className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Gửi</button>
+      </div>:<div className='text-lg flex flex-col items-center my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
+        <span className='text-center font-medium'> Vui lòng đăng nhập để được bình luận.</span>
+        <Link to={'/login'} className='text-base underline text-blue-900'>Đăng nhập ngay</Link>
       </div>
+      }
     </div>
   </div>
     :

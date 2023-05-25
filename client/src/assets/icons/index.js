@@ -4,5 +4,7 @@ const icons = {
   earth: require("../icons/earth.png"),
   comment: require("../icons/comment-solid.png"),
   defaultImg: require("../icons/default.jpg"),
+  defaultCover: require("../icons/defaultcover.png"),
+  defaultAvatar: require("../icons/defaultavatar.png"),
 };
 export default icons;

@@ -56,8 +56,11 @@ const connection = mysql.createConnection({
     const {id}= req.params;
     const sql = "SELECT * FROM user_detail where iduser=?";
     connection.query(sql, id,(err, results) =>{
-      if (err) throw err;
+      if(results){
       res.json(results);
+      } else {
+        res.json({message: 'Không xác định được user'})
+      }
     });
   })
   // lấy ra detail user bằng email
@@ -192,6 +195,19 @@ const connection = mysql.createConnection({
     const postupdate = moment().format("yyyy-MM-DD");
       const sql = "Update posts set posttitle=?, postdesc=?, postthumb=?, tags=?, postupdate=? where idpost=? ";
         connection.query(sql, [posttitle, postdesc, postthumb, tags, postupdate, idpost],(err, results) =>{
+          if(results){
+              res.send(results) 
+              console.log(results)
+          } else{
+            res.json({message: err})
+          }  
+        });
+  })
+
+  app.patch('/api/updateuser', (req, res) => {
+    const {iduser, username, userdesc, useravatar, usercoverimg}=req.body;
+      const sql = "Update user_detail set username=?, userdesc=?, useravatar=?, usercoverimg=? where iduser=? ";
+        connection.query(sql, [username, userdesc, useravatar, usercoverimg, iduser],(err, results) =>{
           if(results){
               res.send(results) 
               console.log(results)

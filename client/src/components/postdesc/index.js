@@ -42,7 +42,7 @@ function PostBody({post, myRef}) {
                 className='rounded-full w-full h-full object-cover'
                 src={post.useravatar} alt='avatar'/>
             </div>
-            <div className='text-lg max-w-[130px] overflow-hidden text-ellipsis font-medium my-2 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
+            <div className='text-lg max-w-[130px] text-center overflow-hidden text-ellipsis font-medium my-2 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
             <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
             <BiUpload className='mr-1'/>
             Uploader
@@ -68,9 +68,9 @@ function PostBody({post, myRef}) {
                     <FaShare className='ml-2 hover:text-[#fdff83]'/>
                     {isOwner?<div onClick={()=>setMenuActice(!menuactive)} className={`relative cursor-pointer px-2 group ${menuactive? 'text-[#fdff83]':'hover:text-[#fdff83]'} `}>
                         <FaEllipsisV/>
-                        <div className={`absolute text-gray-600 bg-white w-28 ${menuactive? 'flex':'group-hover:flex hidden'} flex-col`} >
-                            <div onClick={()=>handleDeletePost()} className='border-b-[1px]'>Xóa</div>
-                            <Link to={`/updatepost/${post.idpost}`} className=''>Sửa</Link>
+                        <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-1/2 translate-x-1/2 bg-[#a4ea3c]  w-28 ${menuactive? 'flex':'group-hover:flex hidden'} flex-col`} >
+                            <div onClick={()=>handleDeletePost()} className='border-b-[1px] p-2 hover:bg-[#c3fa70] text-center rounded-t'>Xóa</div>
+                            <Link to={`/updatepost/${post.idpost}`} className='p-2 hover:bg-[#c3fa70] text-center rounded-b'>Sửa</Link>
                         </div>
                     </div>:<></>}
                 </div>

@@ -7,12 +7,14 @@ import { useStore, action} from '../../store';
 import {BsChevronCompactDown} from 'react-icons/bs';
 import {AiOutlineSearch} from 'react-icons/ai';
 import {IoCreate} from 'react-icons/io5';
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [state, dispatch] = useStore();
   const [user, setUser] = useState({});
   const [inputselect, setInputSelect] = useState(false);
   const [headerNav, setheaderNav] = useState(false);
+  const navigate = useNavigate();
 
   const handleSearch = () => {
     setInputSelect(!inputselect);
@@ -26,6 +28,7 @@ export default function Header() {
     if (answer) {
       dispatch(action.setUser({}));
       localStorage.removeItem("userinfo"); 
+      navigate('/login')
     }
   };
   useEffect(() => {
@@ -86,7 +89,8 @@ export default function Header() {
               <img className='rounded-full w-full h-full object-cover pointer-events-none' src={user.useravatar} alt="avatar"/>
               <div className="absolute hidden group-hover/drop:flex flex-col top-[45px] right-0 w-fit bg-[#8acd26]">
                 <div className="absolute w-full h-6 top-[-22px] "></div>
-                <Link to={`/profile`} className="p-2 whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]">Trang cá nhân</Link>
+                <Link to={`/profile/${user.iduser}`} className="p-2 whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]">Trang cá nhân</Link>
+                <Link to={`/editprofile/${user.iduser}`} className="p-2 whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]">Sửa thông tin</Link>
                 <div onClick={()=>handleLogout()} className="p-2 whitespace-nowrap text-lg font-semibold text-red-500 border-b-[1px] hover:bg-[#a7e944]">Đăng xuất</div>
               </div>            
             </div>
