@@ -9,6 +9,7 @@ import {AiOutlineSearch} from 'react-icons/ai';
 import {IoCreate} from 'react-icons/io5';
 import { useNavigate } from "react-router-dom";
 
+
 export default function Header() {
   const [state, dispatch] = useStore();
   const [user, setUser] = useState({});
@@ -31,6 +32,8 @@ export default function Header() {
       navigate('/login')
     }
   };
+
+  
   useEffect(() => {
     if(state.users.iduser){
       setUser(state.users)
@@ -38,7 +41,6 @@ export default function Header() {
       setUser({})
     }
   }, [state])
-  
   return (
     <div className="flex h-16 items-center justify-between px-5 bg-[var(--primary-header-color)] shadow-md select-none drag-none fixed w-full top-0 z-50">
       <div className="flex flex-1 w-full items-center justify-start">
@@ -79,12 +81,10 @@ export default function Header() {
             <IoCreate className="text-xl font-bold text-green-900 ml-1 group-hover:text-[#f2ffde] group-hover:text-2xl"/>
         </div>
       </Link>
-            
-      <div className="flex ml-2 justify-between min-w-[240px]">
+      <div className="flex ml-2 justify-end w-fit">
         {user.iduser ? 
           <div className="flex group/all py-2 px-1 justify-between items-center">
-            <span className="text-lg font-semibold text-[#21300a] group-hover/all:text-[#436909]">Chào mừng</span>
-            <span className="text-xl text-end max-w-[80px] overflow-hidden text-ellipsis font-bold text-[#ddffab] ml-1 group-hover/all:text-[#f2ffde]"> {user.username}</span>
+            <span className="text-xl text-end max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis font-bold text-[#ddffab] ml-1 group-hover/all:text-[#f2ffde]"> {user.username}</span>
             <div className='relative group/drop rounded-full h-11 w-11  mx-2 bg-[#e1ffb4] border-2 border-green-900 group-hover/all:border-[#e1ffb4]'>
               <img className='rounded-full w-full h-full object-cover pointer-events-none' src={user.useravatar} alt="avatar"/>
               <div className="absolute hidden group-hover/drop:flex flex-col top-[45px] right-0 w-fit bg-[#8acd26]">
@@ -100,6 +100,7 @@ export default function Header() {
             <Link to='/register' className="text-xl font-bold text-[#ddffab] ml-1 hover:text-[#f2ffde] border-[1px] rounded p-2">Đăng Ký</Link>
           </div>}
       </div>
+      
     </div>
   );
 }

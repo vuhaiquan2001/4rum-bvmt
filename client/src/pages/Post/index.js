@@ -15,70 +15,107 @@ function Post() {
     const [isLoading, setisLoading] = useState(true);
     const [comment, setComment] = useState();
     const [replyRef, setreplyRef] = useState();
+    const [replyupdate, setreplyUpdate] = useState();
+    //canreply xem người dùng có muốn reply nữa không(nếu có) trong phần sửa comment
+    const [canreply, setCanReply] = useState(true);
+    // cài biến rerender làm props cho component muốn rerender khi làm 1 việc gì đó.
     const [reRender, setreRender] = useState(1);
-
-
-
+    // lấy vị trí comment để scroll tới
     const scrollRef = useRef();
+    //lấy html của text editor khi onchange
     
-    const getcomment = (comment)=>{
+    const getcomment = useCallback((comment)=>{
       setComment(comment)
-    }
+    },[])
+    //lấy data của comment muốn trả lời qua việc click biểu tượng comment
     const getReplyRef = useCallback((ref)=>{
       setreplyRef(JSON.parse(ref))
     }, [])
+    //lấy data của comment muốn sửa, tương tự bên trên
+    const getReplyUpdate = useCallback((ref)=>{
+      setreplyUpdate(JSON.parse(ref))
+    }, [])
 
-    const fetchPost = async (idpost) => {
-      await axios.get(`/api/postdetail/${idpost}`).then((response) => {
-        setPost(...response.data);
-      });
-      setisLoading(false)
-    }
+    //lấy data post theo id post trên params
     useEffect(() => {
+      const fetchPost = async (idpost) => {
+        await axios.get(`/api/postdetail/${idpost}`).then((response) => {
+          setPost(...response.data);   
+        })
+        setisLoading(false)
+      }   
       fetchPost(idpost); 
       window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
     }, [idpost])
     
+    
+    //thêm mới comment vào csdl và load ra
     const handleSend = () => {
-      if(replyRef){
-        const commentData = {
-          idpost: idpost,
-          iduser: state.users.iduser,
-          replydesc: comment,
-          replyref: {
-            iduserref: replyRef.iduser,
-            usernameref: replyRef.username,
-            replydateref: replyRef.replydate,
-            contentref: replyRef.replydesc,
-          }
-        }
-        axios.post(`/api/reply`, commentData)
-        .then(res => {
-          if(res.data.message){
-            
-          } else {
-            setreRender(Math.floor(Math.random() * 100))
-          }
-        })
+      if(comment ==='<p></p>' || comment===''){
       } else {
-        const commentData = {
-          idpost: idpost,
-          iduser: state.users.iduser,
-          replydesc: comment,
-          replyref: {}
-        }
-        axios.post(`/api/reply`, commentData)
+        if(replyRef){
+          const commentData = {
+            idpost: idpost,
+            iduser: state.users.iduser,
+            replydesc: comment,
+            replyref: {
+              iduserref: replyRef.iduser,
+              usernameref: replyRef.username,
+              replydateref: replyRef.replydate,
+              contentref: replyRef.replydesc,
+            }
+          }
+          axios.post(`/api/upreply`, commentData)
+          .then(res => {
+            if(res.data.message){
+              
+            } else {
+              setComment('')
+              setreRender(Math.floor(Math.random() * 100))
+            }
+          })
+        } else {
+          const commentData = {
+            idpost: idpost,
+            iduser: state.users.iduser,
+            replydesc: comment,
+            replyref: {}
+          }
+          axios.post(`/api/upreply`, commentData)
+          .then(res => {
+            if(res.data.message){
+              
+            } else {
+              setComment('')
+              setreRender(Math.floor(Math.random() * 100))
+            }})}}}
+    
+    const handleUpdate = () => {
+      if(comment ==='<p></p>' || comment===''){
+        return
+      }
+      const commentData = {
+        idreply: replyupdate.idreply,
+        replydesc: comment?comment:replyupdate.replydesc,
+        replyref: canreply? replyupdate.replyref:{}
+      }
+      axios.patch(`/api/updatecomment`, commentData)
         .then(res => {
-          if(res.data.message){
-            
+          if(res.data.changeRows ===0){
+            console.log(res)
           } else {
+            setComment('')
+            setreplyUpdate()
+            setCanReply(true);
             setreRender(Math.floor(Math.random() * 100))
           }
         })
-      }
-      
     }
 
+   const handleCancel=()=>{
+    setreplyUpdate();
+    setCanReply(true);
+    }
   return (
     <>
     {post ? 
@@ -94,25 +131,45 @@ function Post() {
         : <React.Fragment>
           <PostThumb post={post}/>
           <PostBody post={post} myRef={scrollRef}/>
-          <ReplyBody key={reRender} setdata={getReplyRef} myRef={scrollRef}/>
+          <ReplyBody key={reRender} setreplyupdate={getReplyUpdate} setrerender={setreRender} setdata={getReplyRef} myRef={scrollRef}/>
         </React.Fragment>
       }
       {
       state.users.iduser?
-      <div className='text-lg my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
+      <div key={reRender} className='text-lg my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
+        {replyupdate?
+        <>
+        <div onClick={()=>handleCancel()} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy sửa</div>
+        {JSON.parse(replyupdate.replyref).usernameref&&canreply&&<div className='bg-gray-100 p-1 mb-1 flex'>
+          <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{JSON.parse(replyupdate.replyref).usernameref}</div>
+          <div className='flex flex-1'>: 
+          <div dangerouslySetInnerHTML={{__html: JSON.parse(replyupdate.replyref).contentref}}></div></div>
+          <div onClick={()=>setCanReply(!canreply)} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy reply</div>
+        </div>}
+        <CommentEditor  setdata={getcomment} initdata={replyupdate.replydesc}/>
+          <button
+          onClick={()=>handleUpdate()}
+          className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Cập nhật</button>
+        </>:
+        <>
         {replyRef? 
           <div className='bg-gray-100 p-1 mb-1 flex'>
-          <div className='text-lg w-24 overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{replyRef.username}</div>
-          <div className='flex flex-1'>: <div dangerouslySetInnerHTML={{__html: replyRef.replydesc}}></div></div>
+          <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{replyRef.username}</div>
+          <div className='flex flex-1'>: 
+          <div dangerouslySetInnerHTML={{__html: replyRef.replydesc}}></div></div>
           <div onClick={()=>setreplyRef()} className='flex justify-center w-11 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy</div>
-        </div>:<></>}
-        <CommentEditor key={reRender} setdata={getcomment}/>
-        <button
-        onClick={()=>handleSend()}
-        className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Gửi</button>
-      </div>:<div className='text-lg flex flex-col items-center my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
-        <span className='text-center font-medium'> Vui lòng đăng nhập để được bình luận.</span>
-        <Link to={'/login'} className='text-base underline text-blue-900'>Đăng nhập ngay</Link>
+          </div>:<></>
+        }
+          <CommentEditor setdata={getcomment} initdata={false}/>
+          <button
+          onClick={()=>handleSend()}
+          className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Gửi</button>
+        </>}
+      </div>
+        :
+      <div className='text-lg flex flex-col items-center my-4 p-2 rounded w-full border-[1px] bg-[#84cc16] shadow-xl' ref={scrollRef}>
+          <span className='text-center font-medium'> Vui lòng đăng nhập để được bình luận.</span>
+          <Link to={'/login'} className='text-base underline text-blue-900'>Đăng nhập ngay</Link>
       </div>
       }
     </div>

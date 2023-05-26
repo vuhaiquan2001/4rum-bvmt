@@ -1,27 +1,30 @@
 import React, {useState, useEffect, memo} from 'react';
-import {FaUser} from 'react-icons/fa';
+import {FaUser,FaEllipsisV} from 'react-icons/fa';
 import {BiTime, BiUpload} from 'react-icons/bi';
 import {FaComment} from 'react-icons/fa'
 import{MdFavorite, MdReport} from 'react-icons/md'
 
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import axios from "axios";
+import { useStore } from '../../store';
 
 import Moment from 'moment';
 import { firstLetterUppercase } from '../FirstLetterUppercase';
 import Pagination from '../paginations';
 
-function ReplyBody({setdata, myRef}) {
+function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
     const {idpost} = useParams();
     const [replys, setReplys] = useState([]);
+    const [state, ] = useStore();
     //pagination cho reply
     const [currentreplypage, setCurrentReplyPage] = useState(1);
-    const [replyperpage, ] = useState(2);
+    const [replyperpage, ] = useState(10);
     const indexOfLastReply = currentreplypage*replyperpage;
     const indexOfFirstReply= indexOfLastReply - replyperpage;
     const currentReplys = replys.slice(indexOfFirstReply, indexOfLastReply);
     const Paginate = (pageNumber)=> {setCurrentReplyPage(pageNumber)};
 
+    //
     //fetch data reply
     const [isLoading, setisLoading] = useState(true);
     const fetchreply = async (idpost) => {
@@ -40,6 +43,21 @@ function ReplyBody({setdata, myRef}) {
         myRef.current.scrollIntoView()   
         setdata(e.currentTarget.getAttribute('data-rep'))
       }
+
+      const handleReplyUpdate = (e)=> {
+        e.preventDefault();
+        myRef.current.scrollIntoView()   
+        setreplyupdate(e.currentTarget.getAttribute('data-update'))
+      }
+
+      const handleDeleteReply = async(id)=>{
+        const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
+        if (answer) {
+            await axios.get(`/api/deletereply/${id}`).then((response) => {
+                setrerender(Math.floor(Math.random() * 100))
+              })
+        }
+    }
 
   return (
     <div className=' w-full'>
@@ -76,6 +94,15 @@ function ReplyBody({setdata, myRef}) {
                             <BiTime className='w-5 h-5 mr-1'/>
                             {Moment(reply.replydate).format("DD-MM-YYYY")}
                         </div>
+                       
+                        {reply.iduser === state.users.iduser || state.users.usertitle === 'admin'?
+                        <div className={`relative cursor-pointer px-2 group hover:text-[#fdff83]`}>
+                            <FaEllipsisV/>
+                            <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-1/2 translate-x-1/2 bg-[#a4ea3c]  w-28 group-hover:flex hidden flex-col`} >
+                            <div onClick={()=>handleDeleteReply(reply.idreply)}  className='border-b-[1px] p-2 hover:bg-[#c3fa70] text-center rounded-t'>Xóa</div>
+                            <button onClick={(e)=>handleReplyUpdate(e)} data-update={JSON.stringify(reply)} className='p-2 hover:bg-[#c3fa70] text-center rounded-b'>Sửa</button>
+                            </div>
+                        </div>:<></>}
                     </div>
                     {ref.iduserref?
                     <div className='w-full bg-[#6eb00b]  px-2 border-l-4 border-[#bdff5a]'>

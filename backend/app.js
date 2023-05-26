@@ -47,14 +47,33 @@ const connection = mysql.createConnection({
     const {id}= req.params;
     const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idpost=?";
     connection.query(sql, id,(err, results) =>{
-      if (err) throw err;
-      res.json(results);
+      if(results){
+        const viewquantity=JSON.parse(JSON.stringify(results))[0].viewquantity +1;
+        connection.query('update posts set viewquantity=? where idpost=?',[viewquantity,id],(err,rs)=>{
+          
+        })
+        res.json(results)
+      } else{
+        res.json({message: 'Không thể lấy thông tin post!'})
+      }
     });
   })
   //lấy ra detail user theo id user
   app.get('/api/user/:id', (req, res) => {
     const {id}= req.params;
     const sql = "SELECT * FROM user_detail where iduser=?";
+    connection.query(sql, id,(err, results) =>{
+      if(results){
+      res.json(results);
+      } else {
+        res.json({message: 'Không xác định được user'})
+      }
+    });
+  })
+  // lấy account user
+  app.get('/api/useraccount/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "SELECT * FROM users where iduser=?";
     connection.query(sql, id,(err, results) =>{
       if(results){
       res.json(results);
@@ -75,7 +94,7 @@ const connection = mysql.createConnection({
   //lấy api user và post cho post list theo topic
   app.get('/api/userpost/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=?";
+    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ngaytao desc";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -84,7 +103,7 @@ const connection = mysql.createConnection({
 
   app.get('/api/reply/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM replys, user_detail where replys.iduser=user_detail.iduser and idpost=?";
+    const sql = "SELECT * FROM replys, user_detail where replys.iduser=user_detail.iduser and idpost=? order by replydate desc";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -175,7 +194,7 @@ const connection = mysql.createConnection({
         });
   })
 
-  app.post('/api/reply', (req, res) => {
+  app.post('/api/upreply', (req, res) => {
     const {idpost, iduser, replydesc, replyref}=req.body;
     const replydate = moment().format("yyyy-MM-DD");
     const rereply = JSON.stringify(replyref)
@@ -197,7 +216,6 @@ const connection = mysql.createConnection({
         connection.query(sql, [posttitle, postdesc, postthumb, tags, postupdate, idpost],(err, results) =>{
           if(results){
               res.send(results) 
-              console.log(results)
           } else{
             res.json({message: err})
           }  
@@ -208,18 +226,69 @@ const connection = mysql.createConnection({
     const {iduser, username, userdesc, useravatar, usercoverimg}=req.body;
       const sql = "Update user_detail set username=?, userdesc=?, useravatar=?, usercoverimg=? where iduser=? ";
         connection.query(sql, [username, userdesc, useravatar, usercoverimg, iduser],(err, results) =>{
-          if(results){
-              res.send(results) 
-              console.log(results)
+          if(results.changedRows !==0){
+            connection.query('select * from user_detail where iduser=?', iduser,(err, rs)=>{
+              if(rs){
+                res.json(rs)
+              }
+            })    
           } else{
-            res.json({message: err})
+            res.json({message: 'Không có thay đổi'})
           }  
         });
+  })
+
+  // update user account
+  app.patch('/api/updateaccount', (req, res) => {
+    const {iduser, password, newpassword}= req.body;
+    connection.query('select password from users where iduser=?',iduser,(err,rs)=>{
+      if(rs.length>0){
+        bcrypt.compare(password, JSON.parse(JSON.stringify(rs))[0].password).then(function(iscorrect) {
+          if(iscorrect){
+            bcrypt.hash(newpassword, 10).then(hash=>{
+              connection.query('update users set password=? where iduser=?',[hash, iduser],(err,rs)=>{
+                if(rs.changedRows !==0){
+                  res.json(rs)
+                } else{
+                  res.json({message: 'Không thể cập nhật mật khẩu!'})
+                }
+              })
+            })
+          } else{
+            res.json({message: 'Mật cũ khẩu không đúng'})
+          }
+        })
+      } else{
+        res.json({message: 'User không tồn tại'})
+      }
+    })
+  })
+
+  app.patch('/api/updatecomment', (req, res) =>{
+    const {idreply, replydesc, replyref}= req.body;
+    const rereply = JSON.stringify(replyref)
+    const replyupdate = moment().format("yyyy-MM-DD")
+    connection.query('update replys set replydesc=?, replyref=?, replyupdate=? where idreply=?',[replydesc, rereply, replyupdate,idreply], (err, rs)=>{
+      if(rs.changedRows !==0){
+        res.json(rs)
+      } else {
+        res.json({message: 'Không thể cập nhật'})
+      }
+    })
   })
   //DELETE API
   app.get('/api/deletepost/:id', (req, res) => {
     const {id}= req.params;
     const sql = "Delete from posts where idpost=?";
+    connection.query(sql, id,(err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+  })
+
+  app.get('/api/deletereply/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "Delete from replys where idreply=?";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);

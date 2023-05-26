@@ -37,6 +37,19 @@ function Register() {
       }   
     }
   }
+  const handlePassword = (e)=>{
+    const str = e.target.value.replace(/\s/g,'').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    setPassword(str)
+  }
+
+  const handleRePassword = (e)=>{
+    const str = e.target.value.replace(/\s/g,'').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    setRePassword(str)
+  }
   return (
     <div className='flex justify-center w-screen mt-10'>
       <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#84dc00] justify-center px-6 py-12 lg:px-8">
@@ -66,7 +79,7 @@ function Register() {
               </div>
               <div className="mt-2">
                 <input
-                onChange={(e)=> setPassword(e.target.value)}
+                onChange={(e)=> handlePassword(e)}
                 value={password}
                 id="password" name="password" type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
               </div>
@@ -78,7 +91,7 @@ function Register() {
               </div>
               <div className="mt-2">
                 <input
-                onChange={(e)=> setRePassword(e.target.value)}
+                onChange={(e)=> handleRePassword(e)}
                 value={repassword}
                 id="repassword" name="repassword" type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
               </div>

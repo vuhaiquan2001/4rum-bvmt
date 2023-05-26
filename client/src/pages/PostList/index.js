@@ -6,6 +6,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import Moment from "moment";
 import { firstLetterUppercase } from '../../components/FirstLetterUppercase';
+import FilterPost from '../../components/filterPost';
 
 function PostList() {
   const [state, ] = useStore();
@@ -24,6 +25,7 @@ function PostList() {
       });
     }
   }, [state, idtopic])
+
   useEffect(() => {
     axios.get(`/api/topics/${idtopic}`).then((response) => {
       setTopics(...response.data);
@@ -41,8 +43,8 @@ function PostList() {
           <span className='text-[#d9ffba] pl-2'>{topics.topicname}</span>
       </div>
       <div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 
-        <div className='text-2xl px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
-          Đây là thanh nav
+        <div className='flex items-center justify-between px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
+          <FilterPost setpost={setPosts}/>
         </div>
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 '>
