@@ -58,6 +58,15 @@ const connection = mysql.createConnection({
       }
     });
   })
+
+  app.get('/api/commentcount/:id',(req,res)=>{
+    const {id}= req.params;
+    connection.query('select count(idreply) as comment from replys where idpost=?',id,(err,rs)=>{
+      if(rs){
+        res.json(rs)
+      }
+    })
+  })
   //lấy ra detail user theo id user
   app.get('/api/user/:id', (req, res) => {
     const {id}= req.params;
@@ -94,7 +103,7 @@ const connection = mysql.createConnection({
   //lấy api user và post cho post list theo topic
   app.get('/api/userpost/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ngaytao desc";
+    const sql = "SELECT *FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ngaytao desc";
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -157,7 +166,6 @@ const connection = mysql.createConnection({
         connection.query(sql, [email, hash],(err, results) =>{
           if(results){
             const sql2 = "Insert into user_detail (iduser, username, joindate, usertitle, useravatar, usercoverimg, isban, ischatban, userdesc) values (?,?,?,?,?,?,?,?,?)";
-            console.log(results.insertId)
             connection.query(sql2, [results.insertId, username, joindate, usertitle, useravatar, usercoverimg, isban, ischatban, userdesc], (err2, rs)=>{
               if(rs){
                 connection.query("select * from user_detail where iduser_detail=?", rs.insertId, (err, rs)=>{
@@ -193,7 +201,7 @@ const connection = mysql.createConnection({
           }  
         });
   })
-
+  //api gửi bình luận
   app.post('/api/upreply', (req, res) => {
     const {idpost, iduser, replydesc, replyref}=req.body;
     const replydate = moment().format("yyyy-MM-DD");
@@ -202,12 +210,66 @@ const connection = mysql.createConnection({
       const sql = "Insert into replys (idpost, iduser, replydesc, replydate, replyref, replylike) values (?,?,?,?,?,?)";
         connection.query(sql, [idpost, iduser, replydesc, replydate, rereply, replylike],(err, results) =>{
           if(results){
-              res.send(results) 
+            //nếu bình luận thành công thì tăng số bình luận ở post lên = số bình luận trong bảng bình luận
+            connection.query('select count(idreply) as comment from replys where idpost=?', idpost, (err,rs)=>{
+              if(rs){
+                const commentcount = JSON.parse(JSON.stringify(rs))[0].comment
+                connection.query('update posts set commentquantity=? where idpost=?',[commentcount, idpost])
+              }
+            })
+              res.send(results)
           } else{
             res.json({message: err})
           }  
         });
   })
+  //Api vote Post
+  app.post('/api/votepost', (req, res) => {
+    const {idpost, iduser}=req.body;
+      const sql = "Select id_postemotion from postemotion where postemotion.iduser=? and postemotion.idpost=?";
+       connection.query(sql,[iduser,idpost],(err,rs)=>{
+        if(rs.length>0){
+          // nếu thấy người dùng đã thích bài rồi thì xóa thích
+          const id_emotion = JSON.parse(JSON.stringify(rs))[0].id_postemotion;
+          const deletesql = "delete from postemotion where id_postemotion=?";
+          connection.query(deletesql,id_emotion,(err,rs)=>{
+            connection.query('select count(id_postemotion) as vote from postemotion where idpost=?', idpost, (err,rs)=>{
+              if(rs){
+                const emotioncount = JSON.parse(JSON.stringify(rs))[0].vote
+                res.json({message: 'unvote', count: emotioncount})
+                connection.query('update posts set likequantity=? where idpost=?',[emotioncount, idpost])
+              }
+            })
+          })
+        }else{
+          const insertsql = "insert into postemotion (idpost, iduser) values (?,?)";
+          connection.query(insertsql,[idpost, iduser],(err,rs)=>{
+            connection.query('select count(id_postemotion) as vote from postemotion where idpost=?', idpost, (err,rs)=>{
+              if(rs){
+                const emotioncount = JSON.parse(JSON.stringify(rs))[0].vote;
+                res.json({message: 'vote', count: emotioncount})
+                connection.query('update posts set likequantity=? where idpost=?',[emotioncount, idpost])
+              }
+            })
+          })
+        }
+       })
+  })
+    //api check ng dùng đã vote bài chưa
+    app.post('/api/isvote', (req, res) => {
+      const {idpost, iduser}=req.body;
+      const sql = "Select id_postemotion from postemotion where postemotion.iduser=? and postemotion.idpost=?";
+      connection.query(sql,[iduser,idpost],(err,rs)=>{
+        if(rs.length>0){
+          connection.query('select count(id_postemotion) as vote from postemotion where idpost=?', idpost, (err,rs)=>{
+            if(rs){
+              const emotioncount = JSON.parse(JSON.stringify(rs))[0].vote
+              res.json({isvote: 'vote', count: emotioncount})
+            }
+          })
+        }
+      })
+    })
   // PATCH API
   app.patch('/api/updatepost', (req, res) => {
     const {posttitle, idpost, postdesc, postthumb, tags}=req.body;
@@ -286,12 +348,19 @@ const connection = mysql.createConnection({
     });
   })
 
-  app.get('/api/deletereply/:id', (req, res) => {
-    const {id}= req.params;
+  app.get('/api/deletereply', (req, res) => {
+    const {id, idpost}= req.query;
     const sql = "Delete from replys where idreply=?";
     connection.query(sql, id,(err, results) =>{
-      if (err) throw err;
-      res.json(results);
+      if(results){
+        connection.query('select count(idreply) as comment from replys where idpost=?', idpost, (err,rs)=>{
+          if(rs){
+            const commentcount = JSON.parse(JSON.stringify(rs))[0].comment
+            connection.query('update posts set commentquantity=? where idpost=?',[commentcount, idpost])
+          }
+        })
+        res.json(results);
+      }
     });
   })
 app.listen(4000, () => console.log('App listening on port 4000'));

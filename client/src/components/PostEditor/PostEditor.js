@@ -45,7 +45,8 @@ const PostEditor = () => {
     })   
   }, [title, imgUrl, tags])
 
-  const handleUpPost = async() =>{
+  const handleUpPost = async(e) =>{
+    e.preventDefault();
     setisupLoad(true)
     if(title === '' || imgUrl ===''){
       console.log('vui lòng nhập đầy đủ')
@@ -132,7 +133,7 @@ const PostEditor = () => {
           </div>
           <div className='flex'>
             <button onClick={()=>setopenPreview(!openPreview)} className='p-1 mr-2 border-[1px] rounded border-green-300'>Preview</button>
-            <button onClick={()=>handleUpPost()} disabled={isupLoad} className='p-1 border-[1px] rounded border-green-300'>Đăng bài</button>
+            <button onClick={(e)=>handleUpPost(e)} disabled={isupLoad} className='p-1 border-[1px] rounded border-green-300'>Đăng bài</button>
           </div>
       </div>
       {openPreview? 

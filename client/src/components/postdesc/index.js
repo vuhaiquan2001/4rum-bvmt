@@ -1,6 +1,7 @@
 import React, {memo, useEffect, useState} from 'react'
 import {FaUser} from 'react-icons/fa';
 import {BiTime, BiUpload} from 'react-icons/bi';
+import {ImArrowUp} from 'react-icons/im';
 import {FaBookmark, FaShare, FaComment, FaEllipsisV} from 'react-icons/fa'
 import{MdFavorite, MdReport} from 'react-icons/md'
 import Moment from 'moment';
@@ -13,9 +14,12 @@ import axios from 'axios';
 function PostBody({post, myRef}) {
     const executeScroll = () => myRef.current.scrollIntoView()
     const [isOwner, setIsOwner] = useState(false)
-    const [menuactive, setMenuActice] = useState(false)
+    const [menuactive, setMenuActice] = useState(false);
+    const [vote, setVote]= useState(false);
+    const [votecount, setVoteCount]= useState();
     const [state, ] = useStore();
     const navigate = useNavigate()
+
 
     useEffect(()=>{
         if(post.iduser === state.users.iduser || state.users.usertitle === 'admin'){
@@ -24,6 +28,18 @@ function PostBody({post, myRef}) {
             setIsOwner(false)
         }
     },[post.iduser, state])
+
+    useEffect(()=>{
+        const checkvote=async(idpost, iduser)=>{
+            await axios.post(`/api/isvote`,{idpost: idpost, iduser: iduser}).then((res)=>{
+                if(res.data.isvote){
+                    setVote(true)
+                    setVoteCount(res.data.count)
+                }
+            })
+        }
+        checkvote(post.idpost, state.users.iduser)
+    },[post.idpost, state])
 
     const handleDeletePost = async()=>{
         const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
@@ -34,6 +50,17 @@ function PostBody({post, myRef}) {
         }
     }
 
+    const handleVote=async()=>{
+        await axios.post(`/api/votepost`,{idpost: post.idpost, iduser: state.users.iduser}).then((res)=>{
+            if(res.data.message === 'vote'){
+                setVoteCount(res.data.count)
+                setVote(true)
+            } else{
+                setVoteCount(res.data.count)
+                setVote(false)
+            }
+        })
+    }
   return (
     <div className='flex text-2xl mb-4 rounded w-full border-[1px] bg-[#83cc15] shadow-xl'>
         <div className='flex flex-col p-2 w-40 justify-start items-center'>
@@ -77,9 +104,9 @@ function PostBody({post, myRef}) {
             </div>
             <div dangerouslySetInnerHTML={{__html: post.postdesc}} className='w-full text-xl flex-1'></div>
             <div className='flex h-9 justify-start items-center w-full my-1 text-2xl leading-none text-[#e3e63f] bg-[#6eb00b] px-2 border-l-4 border-[#bdff5a]'>   
-                <div className='flex hover:text-[#fdff83] hover:text-4xl'>
-                    <MdFavorite/>
-                    <span className='text-lg'>{post.likequantity}</span>
+                <div onClick={()=>handleVote()} className='flex hover:text-[#fdff83] hover:text-3xl'>
+                    {vote?<ImArrowUp className='text-[#d1fe8e]'/>:<ImArrowUp className='text-[#46631a]'/>}
+                    <span className='text-lg'>{votecount}</span>
                 </div>
                 <div onClick={()=>executeScroll()} className='flex ml-4 hover:text-[#fdff83] hover:text-4xl'>
                     <FaComment/>

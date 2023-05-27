@@ -54,7 +54,8 @@ function EditProfile() {
       fetchUser(iduser)
     }, [iduser])
   
-    const handleUpdate =()=>{
+    const handleUpdate =(e)=>{
+        e.preventDefault();
         if(issetpassword){
             if((userpassword.length<6 || userrepassword.length<6|| usernewpassword.length<6) || usernewpassword !== userrepassword){
                 setErr('Mật khẩu phải nhiều hơn 6 ký tự/mật khẩu nhập lại không đúng')
@@ -207,7 +208,7 @@ function EditProfile() {
                                     <button onClick={()=>setIsSetPassword(!issetpassword)} className="bg-green-500 w-32 mr-2 active:bg-green-600 hover:bg-green-400 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                                     {issetpassword? 'User ': 'Password'}
                                     </button>         
-                                    <button onClick={()=>handleUpdate()} className="bg-green-500 w-32 active:bg-green-600 hover:bg-green-400 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
+                                    <button onClick={(e)=>handleUpdate(e)} className="bg-green-500 w-32 active:bg-green-600 hover:bg-green-400 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                                     Đồng ý
                                     </button>    
                                 </div>

@@ -53,7 +53,12 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
       const handleDeleteReply = async(id)=>{
         const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
         if (answer) {
-            await axios.get(`/api/deletereply/${id}`).then((response) => {
+            await axios.get(`/api/deletereply`,{
+                params: {
+                  id: id,
+                  idpost: idpost,
+                }
+                }).then((response) => {
                 setrerender(Math.floor(Math.random() * 100))
               })
         }

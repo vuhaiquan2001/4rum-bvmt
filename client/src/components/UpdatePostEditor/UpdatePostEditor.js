@@ -37,7 +37,8 @@ const UpdatePostEditor = ({post}) => {
     })   
   }, [title, imgUrl, tags])
  
-  const handleUpdate = async() =>{
+  const handleUpdate = async(e) =>{
+    e.preventDefault();
     if(title === '' || imgUrl ===''){
       console.log('vui lòng nhập đầy đủ')
       setisDanger(true)
@@ -100,7 +101,7 @@ const UpdatePostEditor = ({post}) => {
           </div>
           <div className='flex'>
             <button onClick={()=>setopenPreview(!openPreview)} className='p-1 mr-2 border-[1px] rounded border-green-300'>Preview</button>
-            <button onClick={()=>handleUpdate()} className='p-1 border-[1px] rounded border-green-300'>Cập nhật</button>
+            <button onClick={(e)=>handleUpdate(e)} className='p-1 border-[1px] rounded border-green-300'>Cập nhật</button>
           </div>
       </div>
       {openPreview? 
