@@ -1,31 +1,25 @@
 import React, {useState, useEffect} from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { useStore, action } from '../../store';
 import Moment from "moment";
 import { firstLetterUppercase } from "../FirstLetterUppercase";
 
 function ThreadList(topic) {
   const [posts, setPosts] = useState([]);
-  const [, setIsloading] = useState(true);
-  const [, dispatch] = useStore();
 
   const handlePosts = () => {
-  dispatch(action.setPosts(posts));
   window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
 };
   const fetchPost = async (id)  => {
-    await axios.get(`/api/userpost/${id}`).then((response) => {
+    await axios.get(`/api/homepost/${id}`).then((response) => {
       setPosts(response.data)
     })
-    setIsloading(false)
   }
 
   useEffect(() => {
     fetchPost(topic.topic.idtopic)
   }, [topic.topic.idtopic])
 
-  const currentPosts = posts.slice(0, 3);
 
   return (
     <div className="flex flex-col justify-between min-w-[800px] min-h-[350px] bg-lime-500 mb-5 shadow-xl">
@@ -36,7 +30,7 @@ function ThreadList(topic) {
         <div className="absolute top-0 left-[0px] border-[20px] border-l-lime-500 border-y-[transparent] border-r-transparent"></div>
       </div>
       <div className="mx-2 h-auto w-[900px] cursor-pointer overflow-hidden">
-        {currentPosts.map((post, index) => 
+        {posts.map((post, index) => 
         {
           const formatDate = Moment(post.ngaytao).format("DD-MM-YYYY");
           return post.idtopic !==topic.topic.idtopic? <React.Fragment key={index}/>:
@@ -67,7 +61,7 @@ function ThreadList(topic) {
       </div>
 
       <Link
-      onClick={() => handlePosts(topic.topic.idtopic)}
+      onClick={() => handlePosts()}
       className="bg-lime-500 flex justify-end mr-2 py-2 hover:text-[#d9ffa8]" to={`/postlist/${topic.topic.idtopic}`}>
         Xem thêm....
       </Link>

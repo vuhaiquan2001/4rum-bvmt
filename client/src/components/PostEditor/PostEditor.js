@@ -3,7 +3,6 @@ import StarterKit from '@tiptap/starter-kit'
 import MenuBar from './menuBar'
 import ThumEditor from './thumbEditor'
 import DangerToast from '../toast/dangerToast'
-import SuccessToast from '../toast/successToast'
 
 import { Color } from '@tiptap/extension-color'
 import TextStyle from '@tiptap/extension-text-style'
@@ -29,7 +28,6 @@ const PostEditor = () => {
   const [topics, setTopics] = useState([]);
   const [idtopic, setIdtopic]= useState()
 
-  const [isSuccess, setisSuccess]= useState(false);
   const [isDanger, setisDanger]= useState(false);
 
   const navigate = useNavigate();
@@ -72,11 +70,7 @@ const PostEditor = () => {
               setisupLoad(false)
             }, 1000);   
           } else {
-            setisSuccess(true)
-            setTimeout(() => {
-              setisSuccess(false)
               navigate(`/post/${res.data.insertId}`)
-            }, 1000);   
           }
         })
     }
@@ -101,7 +95,6 @@ const PostEditor = () => {
   })
   return (
     <>
-      {isSuccess? <SuccessToast text={'Đăng bài thành công'} /> :<></>}
       {isDanger? <DangerToast text={'Vui lòng nhập đầy đủ thông tin'} /> :<></>}
       <div className='mb-2 flex items-center justify-between'>
           <div className='flex'>

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import { useStore} from '../../store';
 import Pagination from '../../components/paginations';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
@@ -8,7 +7,6 @@ import PostOfPostList from './post';
 import FilterPost from '../../components/filterPost';
 
 function PostList() {
-  const [state, ] = useStore();
   const [posts, setPosts] = useState([]);
   const [topics, setTopics] = useState([]);
   const {idtopic} = useParams();
@@ -25,14 +23,12 @@ function PostList() {
   const Paginate = (pageNumber)=> {setCurrentPage(pageNumber); window.scrollTo({top: 0, left: 0, behavior: 'smooth'});};
 
   useEffect(() => {
-    if(state.posts.length !==0){
-      setPosts(state.posts)
-    }else {
-      axios.get(`/api/userpost/${idtopic}`).then((response) => {
+      axios.get(`/api/userpost`, 
+      { params: { id: idtopic, orderby: 'ngaytao desc' } }
+      ).then((response) => {
         setPosts(response.data);
       });
-    }
-  }, [state, idtopic])
+  }, [idtopic])
 
   useEffect(() => {
     axios.get(`/api/topics/${idtopic}`).then((response) => {
@@ -46,11 +42,11 @@ function PostList() {
           <span className='text-[#d9ffba] pl-2'>{topics.topicname}</span>
       </div>
       <div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 
-        <div className='flex items-center justify-between px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
-          <FilterPost setpost={setPosts}/>
+        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
+          <FilterPost setpost={setPosts} postlist={posts}/>
         </div>
         <div className='flex flex-col justify-between flex-1'>
-          <div className='flex flex-col w-full px-2 my-4 '>
+          <div className='flex flex-col w-full px-2 my-4 select-none'>
             {currentPosts.map((post, index) => (
               <PostOfPostList post={post} key={index}/>
             ))}

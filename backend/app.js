@@ -101,9 +101,19 @@ const connection = mysql.createConnection({
     });
   })
   //lấy api user và post cho post list theo topic
-  app.get('/api/userpost/:id', (req, res) => {
+  app.get('/api/homepost/:id', (req, res) => {
     const {id}= req.params;
-    const sql = "SELECT *FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ngaytao desc";
+    const sql = `SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ngaytao desc limit 3`;
+    connection.query(sql, id,(err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+  })
+
+  //lấy api user và post cho post list theo topic
+  app.get('/api/userpost', (req, res) => {
+    const {id, orderby}= req.query;
+    const sql = `SELECT *FROM posts, user_detail where posts.iduser=user_detail.iduser and idtopic=? order by ${orderby}`;
     connection.query(sql, id,(err, results) =>{
       if (err) throw err;
       res.json(results);
@@ -118,6 +128,9 @@ const connection = mysql.createConnection({
       res.json(results);
     });
   })
+
+
+
 // API POST DATA
 
   app.post('/api/login', async (req, res) => {
