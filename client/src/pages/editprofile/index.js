@@ -174,7 +174,7 @@ function EditProfile() {
     <>
         {isSuccess? <SuccessToast text={'Cập nhật thành công'} /> :<></>}
         {isDanger? <DangerToast text={err} /> :<></>}
-        {!isloading &&
+        {!isloading ?
         <main className='p-5 flex flex-col items-center'>
         <div className='max-w-7xl w-full h-fit'>
             <section className='relative block h-[500px] select-none'>
@@ -240,7 +240,8 @@ function EditProfile() {
             </section>
     
         </div>
-    </main>}
+    </main>:
+    <div>ĐANG TẢI</div>}
     </>
   )
 }

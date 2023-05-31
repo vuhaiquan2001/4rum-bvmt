@@ -9,8 +9,6 @@ function FilterPost({setpost, postlist}) {
   const sortTypeRef = useRef();
   const searchInputRef = useRef();
   const [issearch, setIsSearch]= useState(true)
-
-  console.log(postlist)
   
   const handleSort =()=>{
     axios.get(`/api/userpost`, 

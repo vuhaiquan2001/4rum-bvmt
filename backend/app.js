@@ -128,7 +128,24 @@ const connection = mysql.createConnection({
       res.json(results);
     });
   })
+  //api search page
+  app.get('/api/searchpost/:keyword', (req, res) => {
+    const {keyword}= req.params;
+    const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and posttitle like ?";
+    connection.query(sql, `%${keyword}%`,(err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+  })
 
+  app.get('/api/searchuser/:keyword', (req, res) => {
+    const {keyword}= req.params;
+    const sql = "SELECT * FROM user_detail where username like ?";
+    connection.query(sql, `%${keyword}%`,(err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+  })
 
 
 // API POST DATA

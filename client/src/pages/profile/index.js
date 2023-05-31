@@ -27,7 +27,7 @@ function Profile() {
   
   return (
     <>
-        {!isloading &&
+        {!isloading ?
         <main className='p-5 flex flex-col items-center'>
         <div className='max-w-7xl w-full h-fit'>
             <section className='relative block h-[500px]'>
@@ -92,7 +92,8 @@ function Profile() {
             </section>
     
         </div>
-    </main>}
+    </main>:
+    <div> Đang tải</div>}
     </>
   )
 }

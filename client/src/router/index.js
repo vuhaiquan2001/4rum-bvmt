@@ -8,6 +8,7 @@ import CreatePost from "../pages/createPost";
 import UpdatePost from "../pages/UpdatePost";
 import Profile from "../pages/profile";
 import EditProfile from "../pages/editprofile";
+import Search from "../pages/Search";
 const publicRoutes = [
   { path: "/", component: Home },
   { path: "/postlist/:idtopic", component: PostList },
@@ -18,6 +19,7 @@ const publicRoutes = [
   { path: "/profile/:iduser", component: Profile },
   { path: "/editprofile/:iduser", component: EditProfile },
   { path: "/updatepost/:idpost", component: UpdatePost },
+  { path: "/search/:keyword", component: Search },
   { path: "*", component: NotFound },
 ];
 

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import icons from "../../assets/icons/index";
 import { Link } from "react-router-dom";
 import HeaderDropDownNav from "../headerDropdownNav";
@@ -17,9 +16,23 @@ export default function Header() {
   const [headerNav, setheaderNav] = useState(false);
   const navigate = useNavigate();
 
-  const handleSearch = () => {
+  const searchRef = useRef();
+
+  const handleSelectSearch = () => {
     setInputSelect(!inputselect);
   };
+  const handleSearch = () => {
+    if(searchRef.current.value.trim() === '') return;
+    navigate(`/search/${searchRef.current.value}`)
+    searchRef.current.value = '';
+  };
+  const handleEnterSearch = (e)=>{
+    if(e.key ==='Enter'){
+      navigate(`/search/${searchRef.current.value}`)
+      searchRef.current.value = '';
+    }
+  }
+
   const handleHeaderNav = () => {
     setheaderNav(!headerNav);
   };
@@ -64,15 +77,18 @@ export default function Header() {
           <BsChevronCompactDown className={`font-bold text-2xl ${headerNav?'text-white':''}`}/>
         </div>
         <div
-          className={`flex flex-1 h-10 max-w-[750px] bg-slate-50 justify- items-center rounded-[50px] border-[1px] hover:border-slate-500 ${
+          className={`flex flex-1 h-10 max-w-[750px] bg-white justify- items-center rounded-[50px] border-[1px] hover:border-slate-500 ${
           inputselect ? "border-slate-500" : ""}`}
-          onSelect={() => handleSearch()}
-          onBlur={() => handleSearch()}>
+          onSelect={() => handleSelectSearch()}
+          onBlur={() => handleSelectSearch()}>
           <AiOutlineSearch className="text-2xl ml-2"/>
           <input
+            ref={searchRef}
+            onKeyDown={(e)=>handleEnterSearch(e)}
             className="w-full outline-none mx-2 text-sm leading-[14px]"
             type="search"
             placeholder="Tìm kiếm"/>
+            <button onClick={()=>handleSearch()} className="mx-2 py-[2px] px-2 bg-[#8acd26] rounded">Search</button>
         </div>
       </div>
 

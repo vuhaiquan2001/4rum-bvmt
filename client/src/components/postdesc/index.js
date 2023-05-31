@@ -1,8 +1,7 @@
 import React, {memo, useEffect, useState} from 'react'
-import {FaUser} from 'react-icons/fa';
 import {BiTime, BiUpload} from 'react-icons/bi';
 import {ImArrowUp} from 'react-icons/im';
-import {FaBookmark, FaShare, FaComment, FaEllipsisV} from 'react-icons/fa'
+import {FaBookmark, FaShare, FaComment, FaEllipsisV, FaUser} from 'react-icons/fa'
 import{MdFavorite, MdReport} from 'react-icons/md'
 import Moment from 'moment';
 import { useStore } from '../../store';
@@ -106,7 +105,7 @@ function PostBody({post, myRef}) {
             <div className='flex h-9 justify-start items-center w-full my-1 text-2xl leading-none text-[#e3e63f] bg-[#6eb00b] px-2 border-l-4 border-[#bdff5a]'>   
                 <div onClick={()=>handleVote()} className='flex hover:text-[#fdff83] hover:text-3xl'>
                     {vote?<ImArrowUp className='text-[#d1fe8e]'/>:<ImArrowUp className='text-[#46631a]'/>}
-                    <span className='text-lg'>{votecount}</span>
+                    <span className='text-lg'>{votecount?votecount:post.likequantity}</span>
                 </div>
                 <div onClick={()=>executeScroll()} className='flex ml-4 hover:text-[#fdff83] hover:text-4xl'>
                     <FaComment/>
