@@ -37,7 +37,7 @@ function PostList() {
   }, [idtopic])
     
   return (
-    <div className='p-5 flex  flex-col  items-center'>
+    <div className='p-5 flex flex-col items-center'>
       <div className='text-2xl max-w-7xl mb-4 p-2 w-full border-y-[1px] border-r-[1px] border-l-8 border-[#94e619] bg-[#56870c] shadow-lg shadow-[#8cd124]'>
           <span className='text-[#d9ffba] pl-2'>{topics.topicname}</span>
       </div>

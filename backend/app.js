@@ -58,7 +58,19 @@ const connection = mysql.createConnection({
       }
     });
   })
-
+  //api get post by iduser
+  app.get('/api/profilepost/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "SELECT * FROM posts where iduser=?";
+    connection.query(sql, id,(err, results) =>{
+      if(results){
+        res.json(results)
+      } else{
+        res.json({message: 'Không thể lấy thông tin post!'})
+      }
+    });
+  })
+  //
   app.get('/api/commentcount/:id',(req,res)=>{
     const {id}= req.params;
     connection.query('select count(idreply) as comment from replys where idpost=?',id,(err,rs)=>{
@@ -225,6 +237,12 @@ const connection = mysql.createConnection({
       const sql = "Insert into posts (posttitle, idtopic, postdesc, ngaytao, likequantity, viewquantity, commentquantity, postthumb, iduser, tags) values (?,?,?,?,?,?,?,?,?,?)";
         connection.query(sql, [posttitle, idtopic, postdesc, ngaytao, likequantity, viewquantity, commentquantity, postthumb, iduser, tags],(err, results) =>{
           if(results){
+            connection.query('select count(idpost) as post from posts where iduser=?', iduser, (err,rs)=>{
+              if(rs){
+                const postcount = JSON.parse(JSON.stringify(rs))[0].post
+                connection.query('update user_detail set postCount=? where iduser=?',[postcount, iduser])
+              }
+            })
               res.send(results) 
           } else{
             res.json({message: err})

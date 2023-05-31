@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useStore, action } from './../../store';
 import {AiFillCamera} from 'react-icons/ai';
 import icons from '../../assets/icons';
-import { Link } from 'react-router-dom';
 
 import DangerToast from './../../components/toast/dangerToast';
 import SuccessToast from './../../components/toast/successToast';
@@ -241,7 +240,9 @@ function EditProfile() {
     
         </div>
     </main>:
-    <div>ĐANG TẢI</div>}
+    <div className='min-h-screen animate-pulse'>
+        
+    </div>}
     </>
   )
 }

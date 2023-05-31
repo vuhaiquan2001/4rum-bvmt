@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import Pagination from '../../components/paginations';
 import axios from 'axios';
 import PostOfPostList from '../../pages/PostList/post';
-import {FaUser,FaUserFriends} from 'react-icons/fa';
+import {FaUser} from 'react-icons/fa';
 import {BiTime} from 'react-icons/bi';
 
 import Moment from 'moment';
@@ -177,7 +177,7 @@ function Search() {
                     </div>
                     <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
                       <BiTime className='mr-1'/>
-                      Bài viết:
+                      Bài viết: {post.postCount}
                     </div>
                   </div>
               </Link>

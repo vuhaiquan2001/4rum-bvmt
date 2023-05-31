@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import HeaderDropDownNav from "../headerDropdownNav";
 import { useStore, action} from '../../store';
 import {BsChevronCompactDown} from 'react-icons/bs';
+import {FaUserEdit,FaUserAlt,FaBook} from 'react-icons/fa';
 import {AiOutlineSearch} from 'react-icons/ai';
 import {IoCreate} from 'react-icons/io5';
 import { useNavigate } from "react-router-dom";
@@ -105,8 +106,10 @@ export default function Header() {
               <img className='rounded-full w-full h-full object-cover pointer-events-none' src={user.useravatar} alt="avatar"/>
               <div className="absolute hidden group-hover/drop:flex flex-col top-[45px] right-0 w-fit bg-[#8acd26]">
                 <div className="absolute w-full h-6 top-[-22px] "></div>
-                <Link to={`/profile/${user.iduser}`} className="p-2 whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]">Trang cá nhân</Link>
-                <Link to={`/editprofile/${user.iduser}`} className="p-2 whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]">Sửa thông tin</Link>
+                <Link to={`/profile/${user.iduser}`} className="p-2 flex item-center leading-none whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]"><FaUserAlt className='mr-1'/> Trang cá nhân</Link>
+                <Link to={`/editprofile/${user.iduser}`} className="p-2 flex item-center leading-none whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]"><FaUserEdit  className='mr-1 text-2xl'/>Sửa thông tin</Link>
+                <Link to={`/storage`} className="p-2 flex item-center leading-none whitespace-nowrap text-lg font-semibold text-yellow-50 border-b-[1px] hover:bg-[#a7e944]"><FaBook  className='mr-1'/>Kho của bạn</Link>
+                
                 <div onClick={()=>handleLogout()} className="p-2 whitespace-nowrap text-lg font-semibold text-red-500 border-b-[1px] hover:bg-[#a7e944]">Đăng xuất</div>
               </div>            
             </div>
