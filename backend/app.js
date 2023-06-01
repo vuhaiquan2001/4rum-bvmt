@@ -188,6 +188,15 @@ const connection = mysql.createConnection({
     });
   })
 
+  //api get topuser
+  app.get('/api/topuser', (req, res) => {
+    const sql = "SELECT (SELECT username from user_detail where user_detail.iduser = posts.iduser) as username, (SELECT useravatar from user_detail where user_detail.iduser = posts.iduser) as useravatar,(SELECT iduser from user_detail where user_detail.iduser = posts.iduser) as iduser, SUM(commentquantity) + SUM(viewquantity) + SUM(likequantity) AS Sum  FROM posts WHERE posts.iduser IN (SELECT iduser from user_detail) GROUP BY iduser ORDER BY sum DESC LIMIT 10";
+    connection.query(sql, (err, results) =>{
+      if (results.length>0){
+      res.json(results);
+      }
+    });
+  })
 
 // API POST DATA
 

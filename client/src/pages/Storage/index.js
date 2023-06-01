@@ -54,6 +54,7 @@ function Storage() {
                 {
                 posts.map((post,index)=>(
                     <Link
+                    key={index}
                     className='flex justify-between items-center border-[1px] mt-[-1px]  bg-[#a3e635] hover:bg-[#b3ff50] hover:text-[#60961a]' 
                     to={`/post/${post.idpost}`}>
                       <div className='flex py-4 w-[75%] border-r-[1px] text-ellipsis max-h-24'>

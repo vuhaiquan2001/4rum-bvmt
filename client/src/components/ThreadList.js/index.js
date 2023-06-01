@@ -25,14 +25,14 @@ function ThreadList(topic) {
 
 
   return (
-    <div className="flex flex-col justify-between min-w-[800px] min-h-[350px] bg-lime-500 mb-5 shadow-xl">
+    <div className="flex flex-col justify-between w-full min-h-[350px] bg-lime-500 mb-5 shadow-xl">
       <div className="bg-lime-600 relative py-2 pl-5  flex justify-between w-[70%] ml-2 my-1">
         <span className="text-center mx-1 font-medium text-lg leading-[1.56rem]">{
         topic.topic.topicname}</span>
         <div className="absolute top-0 right-[-41px] border-[21px] border-l-lime-600 border-y-[transparent] border-r-transparent"></div>
         <div className="absolute top-0 left-[0px] border-[20px] border-l-lime-500 border-y-[transparent] border-r-transparent"></div>
       </div>
-      <div className="mx-2 h-auto w-[900px] cursor-pointer overflow-hidden">
+      <div className="mx-2 h-auto flex-1 cursor-pointer overflow-hidden">
         {posts.map((post, index) => 
         {
           const formatDate = Moment(post.ngaytao).format("DD-MM-YYYY");
@@ -47,7 +47,7 @@ function ThreadList(topic) {
                     src={post.useravatar} alt='avatar'/>
                   </div>
                   <div className='flex flex-1 flex-col px-2'>
-                    <div className='h-8 max-w-[800px] whitespace-nowrap overflow-hidden text-ellipsis'>
+                    <div className='h-8 w-auto whitespace-nowrap overflow-hidden text-ellipsis'>
                       <span className='text-xl font-medium text-[var(--text-color)] hover:underline
                      hover:text-[#851210] text-ellipsis'>{post.posttitle}
                      </span>
