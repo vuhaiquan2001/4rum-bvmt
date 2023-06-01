@@ -8,6 +8,9 @@ function Home() {
   useEffect(() => {
     axios.get('/api/topics').then((response) => {
       setTopics(response.data);
+    })
+    .catch(e => {
+      console.log(e);
     });
   }, []);
   return (

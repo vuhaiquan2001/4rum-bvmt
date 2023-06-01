@@ -9,6 +9,7 @@ import Underline from '@tiptap/extension-underline'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
 import React,{memo} from 'react'
+import '../../styles/tiptap.scss';
 
 const CommentEditor = ({setdata, initdata}) => {
   const cmteditor = useEditor({

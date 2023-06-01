@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import PostBody from '../../components/postdesc';
 import ReplyBody from '../../components/replyBody';
@@ -38,14 +38,25 @@ function Post() {
 
     //lấy data post theo id post trên params
     useEffect(() => {
+      const controller = new AbortController();
       const fetchPost = async (idpost) => {
-        await axios.get(`/api/postdetail/${idpost}`).then((response) => {
-          setPost(...response.data);   
+        await axios.get(`/api/postdetail/${idpost}`,{
+          signal: controller.signal
+        }).then((response) => {
+          setPost(...response.data)
+          setisLoading(false)
         })
-        setisLoading(false)
+        .catch(e=>{
+
+        })
       }   
       fetchPost(idpost); 
       window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+      return ()=>{
+        if (controller) {
+          controller.abort();
+        }
+      }
     }, [idpost])
     
     

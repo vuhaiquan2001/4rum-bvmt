@@ -14,7 +14,9 @@ import Youtube from '@tiptap/extension-youtube'
 
 import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from 'axios';
+
+import '../../styles/tiptap.scss';
 
 const PostEditor = () => {
   const [user, setUser] = useState({});
@@ -47,10 +49,10 @@ const PostEditor = () => {
     e.preventDefault();
     setisupLoad(true)
     if(title === '' || imgUrl ===''){
-      console.log('vui lòng nhập đầy đủ')
       setisDanger(true)
       setTimeout(() => {
         setisDanger(false)
+        setisupLoad(false)
       }, 1000);   
     } else {
       const postdata = {

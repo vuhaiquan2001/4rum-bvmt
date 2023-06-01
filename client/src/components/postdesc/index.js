@@ -2,7 +2,8 @@ import React, {memo, useEffect, useState} from 'react'
 import {BiTime, BiUpload} from 'react-icons/bi';
 import {ImArrowUp} from 'react-icons/im';
 import {FaBookmark, FaShare, FaComment, FaEllipsisV, FaUser} from 'react-icons/fa'
-import{MdFavorite, MdReport} from 'react-icons/md'
+import {BsFillBookmarkCheckFill} from 'react-icons/bs';
+import{MdReport} from 'react-icons/md'
 import Moment from 'moment';
 import { useStore } from '../../store';
 
@@ -15,9 +16,10 @@ function PostBody({post, myRef}) {
     const [isOwner, setIsOwner] = useState(false)
     const [menuactive, setMenuActice] = useState(false);
     const [vote, setVote]= useState(false);
+    const [bookmark, setBookmark]= useState(false);
     const [votecount, setVoteCount]= useState();
     const [state, ] = useStore();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
 
     useEffect(()=>{
@@ -29,28 +31,62 @@ function PostBody({post, myRef}) {
     },[post.iduser, state])
 
     useEffect(()=>{
-        const checkvote=async(idpost, iduser)=>{
-            await axios.post(`/api/isvote`,{idpost: idpost, iduser: iduser}).then((res)=>{
+      const controller = new AbortController();
+        const checkvote=(idpost, iduser)=>{
+            axios.post(`/api/isvote`,{idpost: idpost, iduser: iduser},{
+                signal: controller.signal
+              }).then((res)=>{
                 if(res.data.isvote){
                     setVote(true)
                     setVoteCount(res.data.count)
                 }
             })
+            .catch(e => {
+            });
         }
         checkvote(post.idpost, state.users.iduser)
+        return ()=>{
+            if (controller) {
+              controller.abort();
+            }
+          }
     },[post.idpost, state])
 
-    const handleDeletePost = async()=>{
+    useEffect(()=>{
+      const controller = new AbortController();
+        const checkbookmark=(idpost, iduser)=>{
+            axios.post(`/api/isbookmark`,{idpost: idpost, iduser: iduser},{
+                signal: controller.signal
+              }).then((res)=>{
+                if(res.data.isbookmark){
+                    setBookmark(true)
+                }
+            })
+            .catch(e => {
+            });
+        }
+        checkbookmark(post.idpost, state.users.iduser)
+        return ()=>{
+            if (controller) {
+              controller.abort();
+            }
+          }
+    },[post.idpost, state])
+
+    const handleDeletePost = ()=>{
         const answer = window.confirm("Bạn có chắc muốn xóa bài chứ? Mọi dữ liệu, comment của bài viết sẽ biến mất!");
         if (answer) {
-            await axios.get(`/api/deletepost/${post.idpost}`).then((response) => {
+            axios.get(`/api/deletepost/${post.idpost}`).then((response) => {
                 navigate('/')
               })
+              .catch(e => {
+                console.log(e);
+            });
         }
     }
 
-    const handleVote=async()=>{
-        await axios.post(`/api/votepost`,{idpost: post.idpost, iduser: state.users.iduser}).then((res)=>{
+    const handleVote=()=>{
+        axios.post(`/api/votepost`,{idpost: post.idpost, iduser: state.users.iduser}).then((res)=>{
             if(res.data.message === 'vote'){
                 setVoteCount(res.data.count)
                 setVote(true)
@@ -59,6 +95,21 @@ function PostBody({post, myRef}) {
                 setVote(false)
             }
         })
+        .catch(e => {
+            console.log(e);
+        });
+    }
+    const handleBookmark = ()=>{
+        axios.post(`/api/bookmark`,{idpost: post.idpost, iduser: state.users.iduser}).then((res)=>{
+            if(res.data.message === 'bookmark'){
+                setBookmark(true)
+            } else{
+                setBookmark(false)
+            }
+        })
+        .catch(e => {
+    console.log(e);
+});
     }
   return (
     <div className='flex text-2xl mb-4 rounded w-full border-[1px] bg-[#83cc15] shadow-xl'>
@@ -90,7 +141,10 @@ function PostBody({post, myRef}) {
                     {Moment(post.ngaytao).format("DD-MM-YYYY")}
                 </div>
                 <div className='flex '>
-                    <FaBookmark className='hover:text-[#fdff83]'/>
+                    <div onClick={()=>handleBookmark()}>
+                        {bookmark?<BsFillBookmarkCheckFill className='text-[#e0ffb1]'/>:
+                        <FaBookmark className='hover:text-[#fdff83] text-[#fcff5f]'/>}
+                    </div>
                     <FaShare className='ml-2 hover:text-[#fdff83]'/>
                     {isOwner?<div onClick={()=>setMenuActice(!menuactive)} className={`relative cursor-pointer px-2 group ${menuactive? 'text-[#fdff83]':'hover:text-[#fdff83]'} `}>
                         <FaEllipsisV/>

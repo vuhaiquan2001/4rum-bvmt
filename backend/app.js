@@ -70,6 +70,35 @@ const connection = mysql.createConnection({
       }
     });
   })
+  //api get post for user storage
+  //bookmark post
+  app.get('/api/userbookmarkpost/:id', (req, res) => {
+    const {id}= req.params;
+    //lấy tất cả thông tin ở bảng posts với điều kiện idpost = (idpost trong bảng postemotion và id = iduser)
+    const sql = "select * from posts, user_detail where posts.iduser=user_detail.iduser and idpost in (SELECT idpost FROM posts where idpost in (select idpost from bookmark where iduser =?))";
+    connection.query(sql, id,(err, results) =>{
+      if(results){
+        res.json(results)
+      } else{
+        res.json({message: 'Không thể lấy thông tin post!'})
+      }
+    });
+  })
+  //voted post
+  app.get('/api/uservotepost/:id', (req, res) => {
+    const {id}= req.params;
+    //lấy tất cả thông tin ở bảng posts với điều kiện idpost = (idpost trong bảng postemotion và id = iduser)
+    const sql = "select * from posts, user_detail where posts.iduser=user_detail.iduser and idpost in (SELECT idpost FROM posts where idpost in (select idpost from postemotion where iduser =?))";
+    connection.query(sql, id,(err, results) =>{
+      if(results){
+        res.json(results)
+      } else{
+        res.json({message: 'Không thể lấy thông tin post!'})
+      }
+    });
+  })
+
+
   //
   app.get('/api/commentcount/:id',(req,res)=>{
     const {id}= req.params;
@@ -303,6 +332,7 @@ const connection = mysql.createConnection({
         }
        })
   })
+  
     //api check ng dùng đã vote bài chưa
     app.post('/api/isvote', (req, res) => {
       const {idpost, iduser}=req.body;
@@ -315,6 +345,38 @@ const connection = mysql.createConnection({
               res.json({isvote: 'vote', count: emotioncount})
             }
           })
+        }
+      })
+    })
+    //Api bookmark
+  app.post('/api/bookmark', (req, res) => {
+    const {idpost, iduser}=req.body;
+      const sql = "Select idbookmark from bookmark where bookmark.iduser=? and bookmark.idpost=?";
+       connection.query(sql,[iduser,idpost],(err,rs)=>{
+        if(rs.length>0){
+          // nếu thấy người dùng đã thích bài rồi thì xóa thích
+          const idbookmark = JSON.parse(JSON.stringify(rs))[0].idbookmark;
+          const deletesql = "delete from bookmark where idbookmark=?";
+          connection.query(deletesql,idbookmark,(err,rs)=>{
+            if(rs) {
+              res.json({message: 'unbookmark'})
+            }
+          })
+        }else{
+          const insertsql = "insert into bookmark (idpost, iduser) values (?,?)";
+          connection.query(insertsql,[idpost, iduser],(err,rs)=>{   
+              res.json({message: 'bookmark'})
+          })
+        }
+       })
+  })
+    //api check ng dùng đã bookmark bài chưa
+    app.post('/api/isbookmark', (req, res) => {
+      const {idpost, iduser}=req.body;
+      const sql = "Select idbookmark from bookmark where bookmark.iduser=? and bookmark.idpost=?";
+      connection.query(sql,[iduser,idpost],(err,rs)=>{
+        if(rs){ 
+            res.json({isbookmark: 'bookmark'})
         }
       })
     })

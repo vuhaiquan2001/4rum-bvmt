@@ -14,6 +14,9 @@ function ThreadList(topic) {
     await axios.get(`/api/homepost/${id}`).then((response) => {
       setPosts(response.data)
     })
+    .catch(e => {
+      console.log(e);
+    });
   }
 
   useEffect(() => {

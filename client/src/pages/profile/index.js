@@ -90,7 +90,7 @@ function Profile() {
                             <div className='flex flex-col mt-2 bg-lime-400'>
                                 <div className='flex justify-between border-b-[1px] bg-lime-500 text-lg font-semibold text-yellow-100'>
                                     <span className='ml-2'>Bài viết của {user.username} </span>
-                                    <span className='mr-2'>Số lượng: {user.postCount} Bài</span>
+                                    <span className='mr-2'>Số lượng: {user.postCount?user.postCount:0} Bài</span>
                                 </div>
                                 <ProfilePost iduser={user.iduser}/>
                             </div>

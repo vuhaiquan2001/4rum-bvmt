@@ -16,6 +16,7 @@ import Youtube from '@tiptap/extension-youtube'
 import React, {useState, useEffect, memo} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import '../../styles/tiptap.scss';
 
 const UpdatePostEditor = ({post}) => {
   const [openPreview, setopenPreview]=useState(false);
@@ -26,6 +27,7 @@ const UpdatePostEditor = ({post}) => {
   const [obj, setObj]=useState({});
 
   const [isSuccess, setisSuccess]= useState(false);
+  const [isupLoad, setisupLoad]=useState(false);
   const [isDanger, setisDanger]= useState(false);
   const navigate = useNavigate();
 
@@ -39,11 +41,13 @@ const UpdatePostEditor = ({post}) => {
  
   const handleUpdate = async(e) =>{
     e.preventDefault();
+    setisupLoad(true)
     if(title === '' || imgUrl ===''){
       console.log('vui lòng nhập đầy đủ')
       setisDanger(true)
       setTimeout(() => {
         setisDanger(false)
+       setisupLoad(false)
       }, 1000);   
     } else {
       const postdata = {
@@ -59,12 +63,15 @@ const UpdatePostEditor = ({post}) => {
             setisDanger(true)
             setTimeout(() => {
               setisDanger(false)
+              setisupLoad(false)
             }, 1000);   
           } else {
             setisSuccess(true)
+            setisupLoad(true)
             setTimeout(() => {
               setisSuccess(false)
               navigate(`/post/${post.idpost}`)
+              setisupLoad(false)
             }, 1000);   
           }
         })
@@ -101,7 +108,7 @@ const UpdatePostEditor = ({post}) => {
           </div>
           <div className='flex'>
             <button onClick={()=>setopenPreview(!openPreview)} className='p-1 mr-2 border-[1px] rounded border-green-300'>Preview</button>
-            <button onClick={(e)=>handleUpdate(e)} className='p-1 border-[1px] rounded border-green-300'>Cập nhật</button>
+            <button onClick={(e)=>handleUpdate(e)} disabled={isupLoad} className='p-1 border-[1px] rounded border-green-300'>Cập nhật</button>
           </div>
       </div>
       {openPreview? 

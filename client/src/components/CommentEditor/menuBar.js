@@ -1,13 +1,14 @@
 import React,{useState, useCallback} from 'react'
 import {AiOutlineBold, AiOutlineItalic,AiOutlineStrikethrough, AiOutlineUnderline,AiOutlineYoutube, AiOutlineAlignLeft, AiOutlineAlignRight, AiOutlineAlignCenter,AiOutlineOrderedList, AiOutlineUnorderedList} from 'react-icons/ai';
 import {BiUndo, BiRedo} from 'react-icons/bi';
+import {BsParagraph} from 'react-icons/bs'
 import {MdOutlineKeyboardArrowDown, MdOutlineFormatAlignJustify,MdPlaylistRemove} from 'react-icons/md';
 import {ImImages} from 'react-icons/im'
 import {TbLink, TbUnlink} from 'react-icons/tb';
 import { SketchPicker } from 'react-color'
 
 
-function CommentMenuBar({editor}) {
+function MenuBar({editor}) {
   //ADD LINK
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes('link').href
@@ -52,11 +53,11 @@ function CommentMenuBar({editor}) {
   }
 
   const selectHeading = (e) => {
-      editor.chain().focus().toggleHeading({level: e.target.value}).run()
+    console.log(typeof Number(e.target.value))
+      editor.chain().focus().toggleHeading({level: Number(e.target.value)}).run()
   }
   const [color, setColor]= useState('#000000');
   const [colorpick, setColorpick]= useState(false);
- 
     if (!editor) {
         return null
     }
@@ -116,15 +117,22 @@ function CommentMenuBar({editor}) {
       <AiOutlineUnderline/>
     </button>
 
-    <select name="heading" id="heading" defaultValue={'0'}
+    <select name="heading" id="heading" defaultValue={4}
       onChange={(e)=>selectHeading(e)}
       className={`${editor.isActive('heading', { level: 1 }) ? 'is-active' : ''} border-[1px] p-1 hover:bg-gray-300 mr-1`}
     >
-      <option value="1">H1</option>
-      <option value="2">H2</option>
-      <option value="3">H3</option>
-      <option value="4">H4</option>
+      <option value={1}>H1</option>
+      <option value={2}>H2</option>
+      <option value={3}>H3</option>
+      <option value={4}>H4</option>
     </select>
+
+    <button
+      onClick={() => editor.commands.setParagraph()}
+      className={`border-[1px] p-1 hover:bg-gray-300 mr-1`}
+    >
+      <BsParagraph/>
+    </button>
 
     <button
         onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -245,4 +253,4 @@ function CommentMenuBar({editor}) {
   )
 }
 
-export default CommentMenuBar
+export default MenuBar

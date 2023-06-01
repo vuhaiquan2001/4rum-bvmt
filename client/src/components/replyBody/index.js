@@ -29,9 +29,12 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
     const [isLoading, setisLoading] = useState(true);
     const fetchreply = async (idpost) => {
         await axios.get(`/api/reply/${idpost}`).then((response) => {
-          setReplys(response.data);
+          setReplys(response.data)
+          setisLoading(false)
+        })
+        .catch(e => {
+          console.log(e);
         });
-        setisLoading(false)
       }
       useEffect(() => {
         fetchreply(idpost); 
