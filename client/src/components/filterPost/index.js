@@ -66,12 +66,12 @@ function FilterPost({setpost, postlist}) {
     </section>
     <div className='flex w-full md:justify-end items-center lg:w-fit cursor-pointer select-none'> 
         <span className='hidden whitespace-nowrap md:block'>Quick Search:</span>
-        <input type="search" onKeyDown={(e)=>handleEnterSearch(e)} ref={searchInputRef} className="mx-1 px-2 py-2 h-8 w-52 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none hover:border-sky-500 focus:border-sky-500 focus:ring-sky-500 block rounded-3xl sm:text-sm focus:ring-1" placeholder="Tiêu đề/Tên User" />
+        <input type="search" onKeyDown={(e)=>handleEnterSearch(e)} ref={searchInputRef} className="mr-1 md:mx-1 px-2 py-2 h-8 w-52 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none hover:border-sky-500 focus:border-sky-500 focus:ring-sky-500 block md:rounded-3xl sm:text-sm focus:ring-1" placeholder="Tiêu đề/Tên User" />
         {
           issearch? 
-          <button className='whitespace-nowrap shadow-md border-l-[3px] border-[#cbff82] shadow-[#cbff82] w-24 bg-[#b1f94c] hover:bg-[#a3f72f] hover:shadow-[#b9fb63] rounded p-1' onClick={()=>handleSearch()}>Search</button>
+          <button className='whitespace-nowrap border-l-[3px] border-[#cbff82] w-24 bg-[#b1f94c] hover:bg-[#a3f72f] hover:shadow-[#b9fb63] rounded p-1' onClick={()=>handleSearch()}>Search</button>
           :
-          <button className='whitespace-nowrap shadow-md border-l-[3px] border-[#cbff82] shadow-[#cbff82] w-24 bg-[#b1f94c] rounded p-1' onClick={()=>handleCancleSearch()}>Hủy Search</button>
+          <button className='whitespace-nowrap border-l-[3px] border-[#cbff82] w-24 bg-[#b1f94c] rounded p-1' onClick={()=>handleCancleSearch()}>Hủy Search</button>
         }
     </div>
     </>

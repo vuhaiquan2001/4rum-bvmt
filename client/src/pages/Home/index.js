@@ -7,15 +7,19 @@ function Home() {
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/topics').then((response) => {
+    const controller = new AbortController();
+    axios.get('/api/topics',{signal: controller.signal}).then((response) => {
       setTopics(response.data);
     })
     .catch(e => {
-      console.log(e);
+      
     });
+    return ()=>{
+      controller.abort()
+    }
   }, []);
   return (
-    <div className="p-5 flex flex-col-reverse lg:flex-row w-full justify-center">
+    <div className="p-5 flex flex-col lg:flex-row w-full justify-center">
       <div className="flex flex-1 flex-col">
         {topics.map((topic, index) => 
         (

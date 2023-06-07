@@ -42,7 +42,7 @@ function PostList() {
           <span className='text-[#d9ffba] pl-2'>{topics.topicname}</span>
       </div>
       <div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 
-        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
+        <div className='flex items-center my-1 md:my-0 justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
           <FilterPost setpost={setPosts} postlist={posts}/>
         </div>
         <div className='flex flex-col justify-between flex-1'>

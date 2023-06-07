@@ -100,13 +100,13 @@ const UpdatePostEditor = ({post}) => {
     <>
       {isSuccess? <SuccessToast text={'Đăng bài thành công'} /> :<></>}
       {isDanger? <DangerToast text={'Vui lòng nhập đầy đủ thông tin'} /> :<></>}
-      <div className='mb-2 flex items-center justify-between'>
-          <div className='flex'>
-            <div className='mr-2 '>Title:<input type='text'  value={title} className='ml-1 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setTitle(e.target.value)} placeholder='Nhập tiêu đề bài viết'/></div>
-            <div className='mr-2'>ImgUrl:<input type='text' value={imgUrl} className='ml-1 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setImgUrl(e.target.value)} placeholder='Nhập link ảnh thumbnail'/></div>
-            <div className='mr-2'>Tags<input type='text' value={tags} className='ml-1 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setTags(e.target.value)} placeholder='Split by ,' /></div>
+      <div className='mb-2 flex flex-col lg:flex-row items-center justify-between'>
+          <div className='flex flex-col lg:flex-row'>
+            <div className='mr-2 '><input type='text'  value={title} className='rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setTitle(e.target.value)} placeholder='Nhập tiêu đề bài viết'/></div>
+            <div className='mr-2'><input type='text' value={imgUrl} className='mt-1 lg:mt-0 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setImgUrl(e.target.value)} placeholder='Nhập link ảnh thumbnail'/></div>
+            <div className='mr-2'><input type='text' value={tags} className='mt-1 lg:mt-0 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' onChange={(e)=>setTags(e.target.value)} placeholder='Split by ,' /></div>
           </div>
-          <div className='flex'>
+          <div className='flex mt-1 lg:mt-0'>
             <button onClick={()=>setopenPreview(!openPreview)} className='p-1 mr-2 border-[1px] rounded border-green-300'>Preview</button>
             <button onClick={(e)=>handleUpdate(e)} disabled={isupLoad} className='p-1 border-[1px] rounded border-green-300'>Cập nhật</button>
           </div>

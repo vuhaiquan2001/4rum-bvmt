@@ -9,6 +9,7 @@ import {BiTime} from 'react-icons/bi';
 import Moment from 'moment';
 import { firstLetterUppercase } from '../../components/FirstLetterUppercase';
 import { Link } from 'react-router-dom';
+import UserDetailModal from '../../components/userdetailModal';
 
 function Search() {
     const {keyword} = useParams();
@@ -17,6 +18,8 @@ function Search() {
     const [users, setUsers] = useState([]);
     const sortTypeRef = useRef();
     const sortRef = useRef();
+
+    const [userdetail, setUserdetail]= useState(false);
 
 
   const [currentpage, setCurrentPage] = useState(1);
@@ -95,6 +98,12 @@ function Search() {
         setPosts(copy)
       }
     }
+    const handleHover = (id)=>{
+      setTimeout(() => {
+          setUserdetail(id)
+      }, 1000);
+  }
+
   return (
     <>
     {postsearch?  
@@ -146,8 +155,11 @@ function Search() {
             {currentUsers.map((post, index) => (
                 <Link style={{backgroundImage: `url("${post.usercoverimg}")`}} to={`/profile/${post.iduser}`} key={index} 
                 className='flex w-full h-56 justify-start items-center border-[1px] bg-top bg-cover bg-[#8fdf20] backdrop-opacity-10 mb-2 hover:bg-blend-darken'>
-                  <div  className='flex flex-col ml-2 items-center p-2 border-r-[1px]'>
-                    <div className='rounded-full h-24 w-24 bg-[#e1ffb4] border-[2px] border-green-800'>
+                  <div onMouseLeave={()=>setUserdetail(false)} className='flex relative flex-col ml-2 items-center p-2 border-r-[1px]'>
+                      {userdetail===post.iduser&&
+                      <UserDetailModal user={post}/>
+                      }
+                    <div onMouseEnter={()=>handleHover(post.iduser)} className='rounded-full h-24 w-24 bg-[#e1ffb4] border-[2px] border-green-800'>
                         <img 
                         className='rounded-full w-full h-full object-cover'
                         src={post.useravatar} alt='avatar'/>
@@ -170,10 +182,14 @@ function Search() {
                     Không có mô tả!
                   </div>  
                   } 
-                  <div  className='flex flex-col h-full ml-2 items-center p-2 border-l-[1px]'>
+                  <div  className='flex flex-col h-full ml-2 items-center justify-center p-2 border-l-[1px]'>
                     <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
                       <FaUser className='mr-1'/>
-                      Follow: 
+                      Follower: {post.followerCount}
+                    </div>
+                    <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                      <FaUser className='mr-1'/>
+                      Following: {post.followingCount}
                     </div>
                     <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
                       <BiTime className='mr-1'/>

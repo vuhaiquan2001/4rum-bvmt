@@ -5,12 +5,15 @@ import { useStore } from './../../store/hooks';
 
 import { Link } from 'react-router-dom';
 import ProfilePost from '../../components/profilePost';
+import FollowerTable from '../../components/FollowTable/Follower';
+import FollowingTable from '../../components/FollowTable/Following';
 
 function Profile() {
     const {iduser} = useParams();
     const [state,] = useStore();
     const [user, setUser] = useState();
     const [isloading, setIsLoading] = useState(true);
+    const [table, setTable] = useState('post');
 
     useEffect(() => {
       async function fetchUser(iduser) {
@@ -41,7 +44,7 @@ function Profile() {
             <section className="relative">
                 <div className="container mx-auto px-4">
                     <div className="relative min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-                        <div className="px-6 select-none min-h-[600px]">
+                        <div className="px-6 select-none min-h-[600px] h-fit">
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
                                 <div className="rounded-full w-[150px] h-[150px] absolute left-[50%] translate-x-[-50%] top-[-50px] lg:top-[-50px]">
@@ -60,10 +63,10 @@ function Profile() {
                                 <div className="w-full mt-2 sm:mt-6 lg:mt-0 lg:w-4/12 px-4 lg:order-1">
                                     <div className="flex justify-center py-4 lg:pt-4 pt-8">
                                         <div className="mr-4 p-3 text-center">
-                                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span><span className="text-sm text-blueGray-400">Follower</span>
+                                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{user.followerCount}</span><span className="text-sm text-blueGray-400">Follower</span>
                                         </div>
                                         <div className="mr-4 p-3 text-center">
-                                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">10</span><span className="text-sm text-blueGray-400">Following</span>
+                                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{user.followingCount}</span><span className="text-sm text-blueGray-400">Following</span>
                                         </div>
                                         <div className="lg:mr-4 p-3 text-center">
                                         <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{user.postCount?user.postCount:0}</span><span className="text-sm text-blueGray-400">Posts</span>
@@ -87,12 +90,15 @@ function Profile() {
                                 </div>
                                 }
                             </div>
-                            <div className='flex flex-col mt-2 bg-lime-400'>
-                                <div className='flex justify-between border-b-[1px] bg-lime-500 text-lg font-semibold text-yellow-100'>
-                                    <span className='ml-2'>Bài viết của {user.username} </span>
-                                    <span className='mr-2'>Số lượng: {user.postCount?user.postCount:0} Bài</span>
+                            <div className='flex flex-col my-2 bg-lime-400'>
+                                <div className='flex border-b-[1px] bg-lime-500 text-lg font-semibold text-yellow-100'>
+                                    <span onClick={()=>setTable('post')} className='px-2 border-r-[1px] hidden sm:flex hover:bg-lime-400 cursor-pointer'>Bài viết: {user.postCount?user.postCount:0}</span>
+                                    <span onClick={()=>setTable('follower')} className='px-2 border-r-[1px] hidden sm:flex hover:bg-lime-400 cursor-pointer'>Follower: {user.followerCount}</span>
+                                    <span onClick={()=>setTable('following')} className='px-2 border-r-[1px] hidden sm:flex hover:bg-lime-400 cursor-pointer'>Following: {user.followingCount}</span>
                                 </div>
-                                <ProfilePost iduser={user.iduser}/>
+                                {table==='post'?<ProfilePost iduser={user.iduser}/>:(table==='follower'?
+                                <FollowerTable iduser={user.iduser}/>:
+                                <FollowingTable iduser={user.iduser}/>)}
                             </div>
                         </div>
                     </div>

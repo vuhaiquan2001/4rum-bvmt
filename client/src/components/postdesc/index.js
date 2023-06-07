@@ -11,13 +11,16 @@ import { firstLetterUppercase } from '../FirstLetterUppercase';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import UserDetailModal from '../userdetailModal';
+
 function PostBody({post, myRef}) {
-    const executeScroll = () => myRef.current.scrollIntoView()
-    const [isOwner, setIsOwner] = useState(false)
+    const executeScroll = () => myRef.current.scrollIntoView();
+    const [isOwner, setIsOwner] = useState(false);
     const [menuactive, setMenuActice] = useState(false);
     const [vote, setVote]= useState(false);
     const [bookmark, setBookmark]= useState(false);
     const [votecount, setVoteCount]= useState();
+    const [userdetail, setUserdetail]= useState(false);
     const [state, ] = useStore();
     const navigate = useNavigate();
 
@@ -109,38 +112,53 @@ function PostBody({post, myRef}) {
         })
         .catch(e => {
     console.log(e);
-});
+    });}
+
+    const handleHover = ()=>{
+        setTimeout(() => {
+            setUserdetail(true)
+        }, 1000);
     }
   return (
-    <div className='flex text-2xl mb-4 rounded w-full border-[1px] bg-[#83cc15] shadow-xl'>
-        <div className='flex flex-col p-2 w-40 justify-start items-center'>
-            <div className='rounded-full h-16 w-16 bg-[#e1ffb4] border-[2px] border-green-800'>
+    <div className='flex flex-col md:flex-row text-2xl mb-4 rounded w-full border-[1px] bg-[#83cc15] shadow-xl'>
+        <div onMouseLeave={()=>setUserdetail(false)} className='flex relative h-fit md:flex-col w-full p-2 md:w-40 justify-start items-center'>
+            {userdetail&&post.iduser!==state.users.iduser&&
+            <UserDetailModal user={post}/>
+            }
+            <Link onMouseEnter={()=>handleHover()} to={`/profile/${post.iduser}`} className='rounded-full cursor-pointer h-16 w-16 bg-[#e1ffb4] border-[2px] border-green-800 hover:border-green-500'>
                 <img 
                 className='rounded-full w-full h-full object-cover'
                 src={post.useravatar} alt='avatar'/>
+            </Link>
+            
+            <div className='flex flex-col ml-2'>
+                <div className='text-lg w-fit md:max-w-[130px] md:text-center overflow-hidden text-ellipsis font-medium mb-1 text-[#d9ffa0]'>
+                    {firstLetterUppercase(post.username)} 
+                    <span className='md:hidden text-xs text-yellow-100 ml-1'>Uploader</span>
+                </div>
+                <span className='md:hidden text-xs text-yellow-100'>{firstLetterUppercase(post.usertitle)}.{Moment(post.joindate).format("DD-MM-YYYY")}</span>
             </div>
-            <div className='text-lg max-w-[130px] text-center overflow-hidden text-ellipsis font-medium my-2 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
-            <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+            <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
             <BiUpload className='mr-1'/>
             Uploader
             </div>
-            <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 my-2 text-base leading-none'>
+            <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 my-2 text-base leading-none'>
             <FaUser className='mr-1'/>
             {firstLetterUppercase(post.usertitle)}
             </div>
-            <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+            <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
             <BiTime className='mr-1'/>
             {Moment(post.joindate).format("DD-MM-YYYY")}
             </div>
         </div>
 
-        <div className='flex flex-col flex-1 justify-between items-center border-l-[1px] p-2'>
+        <div className='flex flex-col flex-1 justify-between items-center border-t-[1px] md:border-l-[1px] p-2'>
             <div className='flex justify-between items-center w-full my-1 text-sm text-[#e3e63f] select-none'>
                 <div className='flex underline hover:text-[#fdff83]'>
                     <BiTime className='w-5 h-5 mr-1'/>
                     {Moment(post.ngaytao).format("DD-MM-YYYY")}
                 </div>
-                <div className='flex '>
+                <div className='flex cursor-pointer'>
                     <div onClick={()=>handleBookmark()}>
                         {bookmark?<BsFillBookmarkCheckFill className='text-[#e0ffb1]'/>:
                         <FaBookmark className='hover:text-[#fdff83] text-[#fcff5f]'/>}

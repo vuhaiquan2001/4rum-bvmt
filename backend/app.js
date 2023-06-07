@@ -197,6 +197,30 @@ const connection = mysql.createConnection({
       }
     });
   })
+  //api get follower
+  app.get('/api/getfollower/:iduser', (req, res) => {
+    const {iduser} = req.params;
+    const sql = "select * from user_detail where iduser in (select follower_id as iduser from follows where following_id=?)";
+    connection.query(sql, iduser,(err, results) =>{
+      if (results.length>0){
+      res.json(results);
+      } else {
+        res.json({message: 'Bạn không có Follower nào :('})
+      }
+    });
+  })
+  //api get following
+  app.get('/api/getfollowing/:iduser', (req, res) => {
+    const {iduser} = req.params;
+    const sql = "select * from user_detail where iduser in (select following_id as iduser from follows where follower_id=?)";
+    connection.query(sql, iduser,(err, results) =>{
+      if (results.length>0){
+      res.json(results); 
+      } else {
+        res.json({message: 'Bạn không theo dõi ai :('})
+      }
+    });
+  })
 
 // API POST DATA
 
@@ -384,8 +408,76 @@ const connection = mysql.createConnection({
       const {idpost, iduser}=req.body;
       const sql = "Select idbookmark from bookmark where bookmark.iduser=? and bookmark.idpost=?";
       connection.query(sql,[iduser,idpost],(err,rs)=>{
-        if(rs){ 
+        if(rs.length>0){ 
             res.json({isbookmark: 'bookmark'})
+        }
+      })
+    })
+    //api follow
+    app.post('/api/follow', (req, res) => {
+      //idfollower là id của người theo dõi, idfollowing là id của người được theo dõi, iduser ở đây là id của người cần xem số follow
+      const {idfollower, idfollowing}=req.body;
+      const sql = "Select idfollow from follows where follows.follower_id=? and follows.following_id=?";
+       connection.query(sql,[idfollower, idfollowing],(err,rs)=>{
+        if(rs.length>0){
+          // nếu thấy người dùng đã thích bài rồi thì xóa thích
+          const idfollow = JSON.parse(JSON.stringify(rs))[0].idfollow;
+          const deletesql = "delete from follows where idfollow=?";
+          connection.query(deletesql,idfollow,(err,rs)=>{
+            // đếm các follower_id sẽ ra xem đã follow bao nhiêu người, đếm following_id sẽ ra số người đang theo dõi
+            connection.query('select (select count(idfollow) from follows where follower_id=?) as following,(select count(follower_id) from follows where following_id=?) as follower', [idfollower, idfollowing], (err,rs)=>{
+              if(rs){
+                const follower = JSON.parse(JSON.stringify(rs))[0].follower;
+                const following = JSON.parse(JSON.stringify(rs))[0].following;
+                connection.query('update user_detail set followerCount=? where iduser=?',[follower, idfollowing])
+                connection.query('update user_detail set followingCount=? where iduser=?',[following, idfollower])
+                connection.query('select followerCount, followingCount from user_detail where iduser=?', idfollowing,(err,rs)=>{
+                  if(rs.length>0){
+                  const follower = JSON.parse(JSON.stringify(rs))[0].followerCount;
+                  const following = JSON.parse(JSON.stringify(rs))[0].followingCount;
+                   res.json({message: 'unfollow', follower, following})
+                  }
+                })
+              }
+            })
+          })
+        }else{
+          const insertsql = "insert into follows (follower_id, following_id) values (?,?)";
+          connection.query(insertsql,[idfollower, idfollowing],(err,rs)=>{
+            connection.query('select (select count(following_id) from follows where follower_id=?) as following,(select count(follower_id) from follows where following_id=?) as follower', [idfollower, idfollowing], (err,rs)=>{
+              if(rs){
+                const follower = JSON.parse(JSON.stringify(rs))[0].follower;
+                const following = JSON.parse(JSON.stringify(rs))[0].following;
+                connection.query('update user_detail set followerCount=? where iduser=?',[follower, idfollowing])
+                connection.query('update user_detail set followingCount=? where iduser=?',[following, idfollower])
+                connection.query('select followerCount, followingCount from user_detail where iduser=?', idfollowing,(err,rs)=>{
+                  if(rs.length>0){
+                    const follower = JSON.parse(JSON.stringify(rs))[0].followerCount;
+                    const following = JSON.parse(JSON.stringify(rs))[0].followingCount;
+                    res.json({message: 'follow', follower, following})
+                  }
+                })
+              }
+            })
+          })
+        }
+       })
+    })
+    //api check ng dùng đã follow bài chưa
+    app.post('/api/isfollow', (req, res) => {
+      const {idfollower, idfollowing}=req.body;
+      const sql = "Select idfollow from follows where follows.follower_id=? and follows.following_id=?";
+      connection.query(sql,[idfollower, idfollowing],(err,rs)=>{
+        if(rs.length>0){ 
+          connection.query('select followerCount, followingCount from user_detail where iduser=?', idfollowing,(err,rs)=>{
+            if(rs.length>0){
+              const follower = JSON.parse(JSON.stringify(rs))[0].followerCount;
+              const following = JSON.parse(JSON.stringify(rs))[0].followingCount;
+              res.json({message: 'follow', follower, following})
+            }
+          })
+        } else {
+          res.json({message: 'unfollow'})
         }
       })
     })
@@ -462,8 +554,15 @@ const connection = mysql.createConnection({
     const {id}= req.params;
     const sql = "Delete from posts where idpost=?";
     connection.query(sql, id,(err, results) =>{
-      if (err) throw err;
-      res.json(results);
+      if (results){
+        connection.query('select count(idpost) as count from posts where idpost=?', id, (err,rs)=>{
+          if(rs){
+            const postcount = JSON.parse(JSON.stringify(rs))[0].count
+            connection.query('update user_detail set postCount=? where idpost=?',[postcount, id])
+          }
+        })
+        res.json(results);
+      }
     });
   })
 

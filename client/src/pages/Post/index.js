@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import { Link, useParams } from 'react-router-dom';
 import PostBody from '../../components/postdesc';
 import ReplyBody from '../../components/replyBody';
@@ -142,7 +142,7 @@ function Post() {
         : <React.Fragment>
           <PostThumb post={post}/>
           <PostBody post={post} myRef={scrollRef}/>
-          <ReplyBody key={reRender} setreplyupdate={getReplyUpdate} setrerender={setreRender} setdata={getReplyRef} myRef={scrollRef}/>
+          <ReplyBody iduserpost={post.iduser} key={reRender} setreplyupdate={getReplyUpdate} setrerender={setreRender} setdata={getReplyRef} myRef={scrollRef}/>
         </React.Fragment>
       }
       {

@@ -1,21 +1,24 @@
 import React, {useState, useEffect, memo} from 'react';
-import {FaUser,FaEllipsisV} from 'react-icons/fa';
+import {FaUser,FaEllipsisV,FaComment} from 'react-icons/fa';
 import {BiTime, BiUpload} from 'react-icons/bi';
-import {FaComment} from 'react-icons/fa'
 import{MdFavorite, MdReport} from 'react-icons/md'
 
-import { useParams,Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from "axios";
 import { useStore } from '../../store';
 
 import Moment from 'moment';
 import { firstLetterUppercase } from '../FirstLetterUppercase';
 import Pagination from '../paginations';
+import UserDetailModal from '../userdetailModal';
 
-function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
+function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
     const {idpost} = useParams();
     const [replys, setReplys] = useState([]);
     const [state, ] = useStore();
+
+    const [userdetail, setUserdetail]= useState(false);
+
     //pagination cho reply
     const [currentreplypage, setCurrentReplyPage] = useState(1);
     const [replyperpage, ] = useState(10);
@@ -67,6 +70,11 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
         }
     }
 
+    const handleHover = (id)=>{
+      setTimeout(() => {
+          setUserdetail(id)
+      }, 1000);
+  }
   return (
     <div className=' w-full'>
         <div className='w-40 p-2 border-x-[1px] border-t-[1px] rounded-t text-lg font-semibold bg-[#83cc15] text-yellow-100'>Bình luận:</div>
@@ -74,27 +82,37 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate}) {
         currentReplys.map((reply, index)=> {
             const ref = JSON.parse(reply.replyref)
             return (
-                <div key={index} className='flex text-2xl w-full border-x-[1px] border-t-[1px] bg-[#83cc15] shadow-xl last:border-b-[1px]'>
-                <div className='flex flex-col p-2 w-40 justify-center items-center border-r-[1px]'>
-                    <div className='rounded-full h-16 w-16 bg-[#e1ffb4] border-[2px] border-green-800'>
-                        <img 
-                        className='rounded-full w-full h-full object-cover'
-                        src={reply.useravatar} alt='avatar'/>
-                    </div>
-                    <div className='text-lg max-w-[130px] overflow-hidden text-ellipsis font-medium my-2 text-[#d9ffa0]'>{reply.username}</div>
-                    <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                    <BiUpload className='mr-1'/>
-                    Uploader
-                    </div>
-                    <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 my-2 text-base leading-none'>
-                    <FaUser className='mr-1'/>
-                    {firstLetterUppercase(reply.usertitle)}
-                    </div>
-                    <div className='flex items-center justify-center rounded  h-5 w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                    <BiTime className='mr-1'/>
-                    {Moment(reply.joindate).format("DD-MM-YYYY")}
-                    </div>
-                </div>
+                <div key={index} className='flex flex-col md:flex-row text-2xl w-full border-x-[1px] border-t-[1px] bg-[#83cc15] shadow-xl last:border-b-[1px]'>
+                    <div onMouseLeave={()=>setUserdetail(false)}  className='flex relative h-fit md:flex-col w-full p-2 md:w-40 justify-start items-center border-b-[1px] md:border-r-[1px] md:border-b-0'>
+                      {userdetail===reply.idreply&&reply.iduser!==state.users.iduser&&
+                      <UserDetailModal user={reply}/>
+                      }
+                      <Link onMouseEnter={()=>handleHover(reply.idreply)}  to={`/profile/${reply.iduser}`} className='rounded-full cursor-pointer h-16 w-16 bg-[#e1ffb4] border-[2px] border-green-800 hover:border-green-500'>
+                          <img 
+                          className='rounded-full w-full h-full object-cover'
+                          src={reply.useravatar} alt='avatar'/>
+                      </Link>
+                      
+                      <div className='flex flex-col ml-2'>
+                          <div className='text-lg w-fit md:max-w-[130px] md:text-center overflow-hidden text-ellipsis font-medium mb-1 text-[#d9ffa0]'>
+                              {firstLetterUppercase(reply.username)} 
+                              {iduserpost===reply.iduser&&<span className='md:hidden text-xs text-yellow-100 ml-1'>Uploader</span>}
+                          </div>
+                          <span className='md:hidden text-xs text-yellow-100'>{firstLetterUppercase(reply.usertitle)}.{Moment(reply.joindate).format("DD-MM-YYYY")}</span>
+                      </div>
+                     {iduserpost===reply.iduser&&<div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                      <BiUpload className='mr-1'/>
+                      Uploader
+                      </div>}
+                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 my-2 text-base leading-none'>
+                      <FaUser className='mr-1'/>
+                      {firstLetterUppercase(reply.usertitle)}
+                      </div>
+                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                      <BiTime className='mr-1'/>
+                      {Moment(reply.joindate).format("DD-MM-YYYY")}
+                      </div>
+                  </div>
         
                 <div className='flex flex-col flex-1 justify-between items-center  p-2'>
                     <div className='flex justify-between items-center w-full my-1 text-sm text-[#e3e63f]'>

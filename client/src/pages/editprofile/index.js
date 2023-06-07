@@ -215,18 +215,18 @@ function EditProfile() {
                             {
                             issetpassword?
                             <div className="text-center mt-12 flex flex-col">
-                                <label htmlFor='password' className='text-xl text-start font-semibold text-gray-700'>Mật khẩu cũ:</label>
-                                <input onChange={(e)=>handleChangePassword(e)} type={showpass?'text':'password'} name='password' value={userpassword} required className="text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
-                                <label htmlFor='newpassword' className='text-xl text-start font-semibold text-gray-700'>Mật khẩu mới:</label>
-                                <input onChange={(e)=>handleChangeNewPassword(e)} type={showpass?'text':'password'} name='newpassword' value={usernewpassword} required className="text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
-                                <label htmlFor='newpassword' className='text-xl text-start font-semibold text-gray-700'>Nhập lại mật khẩu mới:</label>
-                                <input onChange={(e)=>handleChangeRePassword(e)} type={showpass?'text':'password'} name='newpassword' value={userrepassword} required className="text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
+                                <label htmlFor='password' className='text-base md:text-xl text-start font-semibold text-gray-700'>Mật khẩu cũ:</label>
+                                <input onChange={(e)=>handleChangePassword(e)} type={showpass?'text':'password'} name='password' value={userpassword} required className="text-base md:text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
+                                <label htmlFor='newpassword' className='text-base md:text-xl text-start font-semibold text-gray-700'>Mật khẩu mới:</label>
+                                <input onChange={(e)=>handleChangeNewPassword(e)} type={showpass?'text':'password'} name='newpassword' value={usernewpassword} required className="text-base md:text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
+                                <label htmlFor='newpassword' className='text-base md:text-xl text-start font-semibold text-gray-700'>Nhập lại mật khẩu mới:</label>
+                                <input onChange={(e)=>handleChangeRePassword(e)} type={showpass?'text':'password'} name='newpassword' value={userrepassword} required className="text-base md:text-xl text-center bg-slate-100 font-semibold leading-normal mb-2 text-gray-600"/>
                                 <div className='text-start'>Hiện mật khẩu: <input  onChange={()=>setShowPass(!showpass)} type='checkbox'/></div>
                             </div>
                             :<div className="text-center mt-12 flex flex-col">
-                                <label htmlFor='username' className='text-2xl text-start font-bold text-gray-700'>User Name:</label>
-                                <input onChange={(e)=>handleUsername(e)} type='text' name='username' value={username} required className="text-4xl text-center bg-slate-100 font-semibold leading-normal mb-2 mt-4 text-gray-600"/>
-                                <label htmlFor='userdesc' className='text-2xl text-start font-bold text-gray-700'>User Description:</label>
+                                <label htmlFor='username' className='text-lg md:text-xl text-start font-bold text-gray-700'>User Name:</label>
+                                <input onChange={(e)=>handleUsername(e)} type='text' name='username' value={username} required className="text-2xl text-center bg-slate-100 font-semibold leading-normal mb-2 mt-4 text-gray-600"/>
+                                <label htmlFor='userdesc' className='text-lg md:text-xl text-start font-bold text-gray-700'>User Description:</label>
                                 {user.userdesc===''? 
                                 <textarea onChange={(e)=>handleUserDesc(e)} value={userdesc} name='userdesc'  required className="mb-2 p-1 text-gray-500 mt-4 w-full bg-slate-100"/>:
                                 <textarea onChange={(e)=>handleUserDesc(e)} value={userdesc} name='userdesc' className="mb-2 p-1 text-center text-gray-500 mt-4 w-full bg-slate-100"/>

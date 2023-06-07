@@ -27,7 +27,7 @@ function Pagination({postPerPage, currentPage,totalPosts, Paginate}) {
                     return <div key={number}></div>
                 } else{
                 return (
-                    <div key={number} className={`mx-[2px] rounded ${number!==currentPage? 'bg-[#5e910c]': 'bg-[#a3e635]'} hover:bg-[#b3ff50] hover:text-[#60961a] border-[1px]`}>
+                    <div key={number} className={`mx-[2px] rounded ${number!==currentPage? 'bg-[#a3e635]': 'bg-[#5e910c]'} hover:bg-[#b3ff50] hover:text-[#60961a] border-[1px]`}>
                         <span className='p-3' onClick={()=>Paginate(number)}>{number}</span>
                     </div>
                     )
