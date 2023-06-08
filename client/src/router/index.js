@@ -10,9 +10,11 @@ import Profile from "../pages/profile";
 import EditProfile from "../pages/editprofile";
 import Search from "../pages/Search";
 import Storage from "../pages/Storage";
+import News from "../pages/News";
 const publicRoutes = [
   { path: "/", component: Home },
   { path: "/postlist/:idtopic", component: PostList },
+  { path: "/news/:keyword", component: News },
   { path: "/post/:idpost", component: Post },
   { path: "/login", component: Login },
   { path: "/register", component: Register },

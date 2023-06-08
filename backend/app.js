@@ -42,6 +42,52 @@ const connection = mysql.createConnection({
     });
     });
 
+
+  // lấy bài viết mới nhất
+  app.get('/api/newestpost', (req, res) => {
+    var sql = "SELECT * FROM posts, user_detail where not idtopic=1 and posts.iduser=user_detail.iduser order by ngaytao desc";
+    connection.query(sql, (err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+    });
+  // lấy bài viết nhiều vote nhất
+  app.get('/api/themostvotes', (req, res) => {
+    var sql = "SELECT * FROM posts, user_detail where not idtopic=1 and posts.iduser=user_detail.iduser order by likequantity desc";
+    connection.query(sql, (err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+    });
+   // lấy bài viết nhiều views nhất
+  app.get('/api/themostviews', (req, res) => {
+    var sql = "SELECT * FROM posts, user_detail where not idtopic=1 and posts.iduser=user_detail.iduser order by viewquantity desc";
+    connection.query(sql, (err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+    }); 
+  // lấy bài viết nhiều replys nhất
+  app.get('/api/themostreplys', (req, res) => {
+    var sql = "SELECT * FROM posts, user_detail where not idtopic=1 and posts.iduser=user_detail.iduser order by commentquantity desc";
+    connection.query(sql, (err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+    }); 
+    // lấy bài viết nhiều của những người đã follow 
+  app.get('/api/followingpost/:id', (req, res) => {
+    const {id}= req.params;
+    var sql = "SELECT * FROM posts,user_detail where posts.iduser in (select following_id from follows where follower_id=?) and posts.iduser=user_detail.iduser";
+    connection.query(sql, id,(err, results) =>{
+      if(results.length>0){
+        res.json(results)
+      } else {
+        res.json({message: 'Bạn không follow ai cả.'})
+      }
+    });
+    }); 
+
   //api cho chi tiết bài viết theo id bài viết
   app.get('/api/postdetail/:id', (req, res) => {
     const {id}= req.params;

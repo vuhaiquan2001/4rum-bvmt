@@ -2,10 +2,11 @@ import React,{useEffect, useState, memo} from 'react'
 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import CarouselSideBar from '../carousel';
+import {useStore} from '../../store';
 
 function SideBar() {
     const [top, setTop] = useState();
+    const [state,] = useStore();
     const [isLoading, setisLoading] = useState(true);
     useEffect(() => {
     const controller = new AbortController();
@@ -22,7 +23,7 @@ function SideBar() {
     }, [])
   return (
     <>
-    <div className='border-b-[3px] p-2'>
+    <div className='border-b-[3px] p-2 h-fit'>
       <span className='text-center text-lg font-medium'>Theo dõi chúng tôi tại:</span>
       <div className="lg:mr-2 lg:mt-0 mt-3 w-full flex justify-between">
         <Link
@@ -48,11 +49,19 @@ function SideBar() {
         </Link>
       </div>
     </div>
-    <div className='border-b-[3px] p-2'>
-      <CarouselSideBar />
+    <div className='border-b-[3px] p-2 text-base font-medium text-yellow-100'>
+      Xin chào {state.users.username?<span className='text-lg font-semibold text-yellow-100'>{state.users.username}</span>:<Link to={'/login'} className='underline text-base text-blue-800'>Đăng nhập ngay</Link>}
     </div>
-    
-    {!isLoading&&<div className='hidden lg:flex flex-col border-b-[3px] '>
+    <div className='flex flex-col border-b-[3px]'>
+      <span className='text-center text-lg font-medium'>Bài viết</span>
+      <Link to={`/news/follower`} className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết bạn theo dõi</Link>
+      <Link to={`/news/newest`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết mới nhất</Link>
+      <Link to={`/news/mostview`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết nhiều lượt xem nhất</Link>
+
+      <Link to={`/news/mostvote`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết nhiều lượt Vote nhất</Link>
+      <Link to={`/news/mostcomment`} className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết sôi nổi nhất</Link>
+    </div>
+    {!isLoading&&<div className='flex flex-col border-b-[3px] '>
         <span className='text-center text-lg font-medium'>Người dùng tiêu biểu</span>
         {top.map((user,index)=>(
             <Link key={index} to={`/profile/${user.iduser}`} className='flex p-2 items-center justify-between hover:bg-[#acf83a]'>
@@ -68,13 +77,6 @@ function SideBar() {
             </Link>
         ))}
     </div>}
-
-    <div className='flex flex-col border-b-[3px]'>
-      <span className='text-center text-lg font-medium'>Bài viết</span>
-      <Link className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết mới nhất</Link>
-      <Link className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết nhiều like nhất</Link>
-      <Link className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết bạn theo dõi</Link>
-    </div>
     </>
   )
 }

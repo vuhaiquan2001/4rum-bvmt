@@ -46,7 +46,7 @@ function FollowingTable({iduser}) {
           {users.length<=0?<div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>Bạn không Follow ai cả <img src={icons.pepeSad} alt='pepe'/></div>:
           <div className='flex flex-col'>
             {currentPosts.map((user, index)=>(
-                <Link onMouseLeave={()=>setUserdetail(false)} to={`/profile/${user.iduser}`} key={index} className='flex relative items-center justify-between p-1 border-b-[1px] hover:bg-lime-300'>
+                <Link onMouseLeave={()=>setUserdetail(false)} to={`/profile/${user.iduser}`} key={index} className='flex flex-col items-start md:flex-row relative md:items-center justify-between p-1 border-b-[1px] hover:bg-lime-300'>
                     {userdetail===user.iduser&&
                     <UserDetailModal user={user}/>
                     }
@@ -59,13 +59,13 @@ function FollowingTable({iduser}) {
                         <div className='flex items-center text-yellow-100'>
                             <span className='flex items-center h-fit capitalize text-base font-semibold py-1 px-2 bg-green-500 hover:bg-green-400 rounded mr-1'>{user.usertitle}</span>
                             <span className='flex items-center mr-1 text-base font-semibold'>{user.username}</span>
-                            <span className='flex items-center flex-1 text-sm font-medium italic overflow-hidden text-ellipsis bg-slate-400 bg-opacity-30'>"{user.userdesc!==''?user.userdesc:'Không có mô tả.'}"</span>
+                            <span className='hidden sm:flex items-center flex-1 text-sm font-medium italic overflow-hidden text-ellipsis bg-slate-400 bg-opacity-30'>"{user.userdesc!==''?user.userdesc:'Không có mô tả.'}"</span>
                         </div>
                     </div>
-                    <div className='flex w-fit px-2'>
-                        <span className='ml-2 text-base font-medium flex items-center text-green-800'>Bài viết: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.postCount}</p></span>
-                        <span className='ml-2 text-base font-medium flex items-center text-green-800'>Follower: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.followerCount}</p></span>
-                        <span className='ml-2 text-base font-medium flex items-center text-green-800'>Following: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.followingCount}</p></span>
+                    <div className='flex w-fit px-2 py-2 md:py-0'>
+                        <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-green-800'>Posts: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.postCount}</p></span>
+                        <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-green-800'>Follower: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.followerCount}</p></span>
+                        <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-green-800'>Following: <p className='ml-1 text-end text-lg font-semibold text-yellow-100'>{user.followingCount}</p></span>
                     </div>
                 </Link>
             ))}

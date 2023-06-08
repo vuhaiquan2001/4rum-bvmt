@@ -10,6 +10,7 @@ import Moment from 'moment';
 import { firstLetterUppercase } from '../../components/FirstLetterUppercase';
 import { Link } from 'react-router-dom';
 import UserDetailModal from '../../components/userdetailModal';
+import icons from '../../assets/icons';
 
 function Search() {
     const {keyword} = useParams();
@@ -133,9 +134,15 @@ function Search() {
         </div>
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
-            {currentPosts.map((post, index) => (
-                <PostOfPostList post={post} key={index}/>
-            ))}
+            {posts.length<=0?
+           <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+            Bài viết không tồn tại <img src={icons.pepeSad} alt='pepe'/>
+           </div>
+           :<>
+              {currentPosts.map((post, index) => (
+                  <PostOfPostList post={post} key={index}/>
+              ))}
+            </>}
           </div>
           <Pagination postPerPage={postperpage} currentPage={currentpage} totalPosts={posts.length} Paginate={Paginate}/>
         </div>
@@ -152,52 +159,58 @@ function Search() {
         </div>
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
-            {currentUsers.map((post, index) => (
-                <Link style={{backgroundImage: `url("${post.usercoverimg}")`}} to={`/profile/${post.iduser}`} key={index} 
-                className='flex w-full h-56 justify-start items-center border-[1px] bg-top bg-cover bg-[#8fdf20] backdrop-opacity-10 mb-2 hover:bg-blend-darken'>
-                  <div onMouseLeave={()=>setUserdetail(false)} className='flex relative flex-col ml-2 items-center p-2 border-r-[1px]'>
-                      {userdetail===post.iduser&&
-                      <UserDetailModal user={post}/>
-                      }
-                    <div onMouseEnter={()=>handleHover(post.iduser)} className='rounded-full h-24 w-24 bg-[#e1ffb4] border-[2px] border-green-800'>
-                        <img 
-                        className='rounded-full w-full h-full object-cover'
-                        src={post.useravatar} alt='avatar'/>
+            {posts.length<=0?
+            <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+              Người dùng này không tồn tại <img src={icons.pepeSad} alt='pepe'/>
+            </div>:
+           <>
+              {currentUsers.map((post, index) => (
+                  <Link style={{backgroundImage: `url("${post.usercoverimg}")`}} to={`/profile/${post.iduser}`} key={index} 
+                  className='flex w-full h-56 justify-start items-center border-[1px] bg-top bg-cover bg-[#8fdf20] backdrop-opacity-10 mb-2 hover:bg-blend-darken'>
+                    <div onMouseLeave={()=>setUserdetail(false)} className='flex relative flex-col ml-2 items-center p-2 border-r-[1px]'>
+                        {userdetail===post.iduser&&
+                        <UserDetailModal user={post}/>
+                        }
+                      <div onMouseEnter={()=>handleHover(post.iduser)} className='rounded-full h-24 w-24 bg-[#e1ffb4] border-[2px] border-green-800'>
+                          <img 
+                          className='rounded-full w-full h-full object-cover'
+                          src={post.useravatar} alt='avatar'/>
+                      </div>
+                      <div className='text-lg max-w-[130px] text-center overflow-hidden text-ellipsis font-medium bg-green-400 rounded my-2 px-1 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
+                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                        <FaUser className='mr-1'/>
+                        {firstLetterUppercase(post.usertitle)}
+                      </div>
+                      <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                        <BiTime className='mr-1'/>
+                        {Moment(post.joindate).format("DD-MM-YYYY")}
+                      </div>
                     </div>
-                    <div className='text-lg max-w-[130px] text-center overflow-hidden text-ellipsis font-medium bg-green-400 rounded my-2 px-1 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
-                    <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                      <FaUser className='mr-1'/>
-                      {firstLetterUppercase(post.usertitle)}
+                    {post.userdesc !== ""?
+                    <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
+                      {post.userdesc}
+                    </div>:
+                    <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
+                      Không có mô tả!
+                    </div>  
+                    } 
+                    <div  className='flex flex-col h-full ml-2 items-center justify-center p-2 border-l-[1px]'>
+                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                        <FaUser className='mr-1'/>
+                        Follower: {post.followerCount}
+                      </div>
+                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                        <FaUser className='mr-1'/>
+                        Following: {post.followingCount}
+                      </div>
+                      <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                        <BiTime className='mr-1'/>
+                        Bài viết: {post.postCount}
+                      </div>
                     </div>
-                    <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                      <BiTime className='mr-1'/>
-                      {Moment(post.joindate).format("DD-MM-YYYY")}
-                    </div>
-                  </div>
-                  {post.userdesc !== ""?
-                  <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
-                    {post.userdesc}
-                  </div>:
-                  <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
-                    Không có mô tả!
-                  </div>  
-                  } 
-                  <div  className='flex flex-col h-full ml-2 items-center justify-center p-2 border-l-[1px]'>
-                    <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                      <FaUser className='mr-1'/>
-                      Follower: {post.followerCount}
-                    </div>
-                    <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                      <FaUser className='mr-1'/>
-                      Following: {post.followingCount}
-                    </div>
-                    <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                      <BiTime className='mr-1'/>
-                      Bài viết: {post.postCount}
-                    </div>
-                  </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </>}
           </div>
           <Pagination postPerPage={postperpage} currentPage={currentpage} totalPosts={posts.length} Paginate={Paginate}/>
         </div>

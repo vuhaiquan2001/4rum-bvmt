@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import PostOfPostList from './post';
 
 import FilterPost from '../../components/filterPost';
+import icons from '../../assets/icons';
 
 function PostList() {
   const [posts, setPosts] = useState([]);
@@ -47,9 +48,15 @@ function PostList() {
         </div>
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
-            {currentPosts.map((post, index) => (
-              <PostOfPostList post={post} key={index}/>
-            ))}
+           {posts.length<=0?
+           <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+            Không có bài viết nào cả <img src={icons.pepeSad} alt='pepe'/>
+           </div>
+           :<>
+              {currentPosts.map((post, index) => (
+                <PostOfPostList post={post} key={index}/>
+              ))}
+            </>}
           </div>
           <Pagination postPerPage={postperpage} currentPage={currentpage} totalPosts={posts.length} Paginate={Paginate}/>
         </div>

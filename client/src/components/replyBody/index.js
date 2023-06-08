@@ -124,7 +124,7 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
                         {reply.iduser === state.users.iduser || state.users.usertitle === 'admin'?
                         <div className={`relative cursor-pointer px-2 group hover:text-[#fdff83]`}>
                             <FaEllipsisV/>
-                            <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-1/2 translate-x-1/2 bg-[#a4ea3c]  w-28 group-hover:flex hidden flex-col`} >
+                            <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-0 lg:right-1/2 lg:translate-x-1/2 bg-[#a4ea3c]  w-28 group-hover:flex hidden flex-col`} >
                             <div onClick={()=>handleDeleteReply(reply.idreply)}  className='border-b-[1px] p-2 hover:bg-[#c3fa70] text-center rounded-t'>Xóa</div>
                             <button onClick={(e)=>handleReplyUpdate(e)} data-update={JSON.stringify(reply)} className='p-2 hover:bg-[#c3fa70] text-center rounded-b'>Sửa</button>
                             </div>

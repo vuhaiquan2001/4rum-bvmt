@@ -2,6 +2,7 @@ import React,{useEffect, useState} from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Pagination from '../paginations';
+import moment from 'moment';
 
 function ProfilePost({iduser}) {
     const [posts, setPosts] = useState([])
@@ -32,30 +33,27 @@ function ProfilePost({iduser}) {
         {currentPosts.map((post,index)=>(
             <Link
             key={index}
-            className='flex justify-between items-center border-[1px] mt-[-1px]  bg-[#a3e635] hover:bg-[#b3ff50] hover:text-[#60961a]' 
+            className='flex flex-col lg:flex-row justify-between items-center border-[1px] mt-[-1px]  bg-[#a3e635] hover:bg-[#b3ff50] hover:text-[#60961a]' 
             to={`/post/${post.idpost}`}>
-                <div className='flex py-4 w-[75%] lg:border-r-[1px] text-ellipsis max-h-24'>
-                    <div className='flex justify-between flex-1 px-2'>
-                        <div className='h-8 max-w-[800px] whitespace-nowrap overflow-hidden text-ellipsis'>
+                <div className='flex py-4 w-full lg:w-[75%] text-ellipsis h-fit'>
+                    <div className='flex flex-col lg:flex-row justify-between flex-1 px-2'>
+                        <div className='h-8 max-w-[200px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[800px] whitespace-nowrap overflow-hidden text-ellipsis'>
                             <span className='text-lg font-medium text-[var(--text-color)] hover:underline hover:text-[#851210] text-ellipsis'>
-                            {post.posttitle}
+                            {post.posttitle}ádasdsadasdas  ád á  ádasdasdadad ádasd ádasdasd 
                             </span>
                         </div>
-                        <div className='hidden lg:flex'>
+                        <div className='flex flex-wrap'>
                             {post.tags.split(',').map((tag, index)=> (
-                                <div key={index} className='text-base font-medium leading-none p-2 mr-2 border-[1px] text-green-200 bg-green-600 rounded hover:bg-green-400'>#{tag}</div>
+                                <div key={index} className='text-base h-fit font-medium leading-none p-2 mr-2 border-[1px] text-green-200 bg-green-600 rounded hover:bg-green-400'>#{tag}</div>
                             ))}
                         </div>
                     </div>
                 </div>
-                <div className='hidden lg:flex justify-between items-center py-4 w-[25%]'>
-                    <div className='pl-2'>
-                        <span className='text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline'>Votes: {post.likequantity}</span>
-                    </div>
-                    <div className='flex flex-col pr-2 text-end'>
-                        <span className='text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline pb-1'>Views: {post.viewquantity}</span>
-                        <span className='text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline'>Comments: {post.commentquantity}</span>
-                    </div>
+                <div className='flex flex-row flex-wrap lg:flex-col justify-between items-start px-2 w-full lg:w-[25%] lg:border-l-[1px]'>
+                        <span className='text-sm lg:text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline'>CreateAt: {moment(post.ngaytao).format("DD-MM-YYYY")}</span>    
+                        <span className='text-sm lg:text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline'>Votes: {post.likequantity}</span>
+                        <span className='text-sm lg:text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline pb-1'>Views: {post.viewquantity}</span>
+                        <span className='text-sm lg:text-base font-medium hover:text-green-700 text-[var(--sub-text-color)] hover:underline'>Comments: {post.commentquantity}</span>
                 </div>
             </Link>
         ))}

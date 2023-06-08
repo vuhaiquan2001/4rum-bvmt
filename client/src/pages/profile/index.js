@@ -145,9 +145,9 @@ function Profile() {
                             </div>
                             <div className='flex flex-col my-2 bg-lime-400'>
                                 <div className='flex border-b-[1px] bg-lime-500 text-lg font-semibold text-yellow-100'>
-                                    <span onClick={()=>setTable('post')} className={`px-2 ${table==='post'?'bg-lime-400':''}  hidden sm:flex hover:bg-lime-400 cursor-pointer`}>Bài viết: {user.postCount?user.postCount:0}</span>
-                                    <span onClick={()=>setTable('follower')} className={`px-2 ${table==='follower'?'bg-lime-400':''} border-r-[1px] hidden sm:flex hover:bg-lime-400 cursor-pointer`}>Follower: {user.followerCount}</span>
-                                    <span onClick={()=>setTable('following')} className={`px-2 ${table==='following'?'bg-lime-400':''} border-r-[1px] hidden sm:flex hover:bg-lime-400 cursor-pointer`}>Following: {user.followingCount}</span>
+                                    <span onClick={()=>setTable('post')} className={`px-2 ${table==='post'?'bg-lime-400':''}  flex hover:bg-lime-400 cursor-pointer`}>Posts</span>
+                                    <span onClick={()=>setTable('follower')} className={`px-2 ${table==='follower'?'bg-lime-400':''} border-r-[1px] flex hover:bg-lime-400 cursor-pointer`}>Follower</span>
+                                    <span onClick={()=>setTable('following')} className={`px-2 ${table==='following'?'bg-lime-400':''} border-r-[1px] flex hover:bg-lime-400 cursor-pointer`}>Following</span>
                                 </div>
                                 {table==='post'?<ProfilePost iduser={user.iduser}/>:(table==='follower'?
                                 <FollowerTable iduser={user.iduser}/>:

@@ -26,7 +26,7 @@ function Home() {
           <ThreadList topic={topic} key={index}></ThreadList>
         ))}
       </div>
-      <div className="flex flex-col w-full h-[300px] mb-3 lg:mb-0  lg:w-[300px] lg:h-auto bg-lime-500 shadow-xl lg:ml-5">
+      <div className="flex flex-col w-full h-fit mb-3 lg:mb-0  lg:w-[300px] lg:h-auto bg-lime-500 shadow-xl lg:ml-5">
         <SideBar/>
       </div>
     </div>
