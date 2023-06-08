@@ -6,5 +6,6 @@ const icons = {
   defaultImg: require("../icons/default.jpg"),
   defaultCover: require("../icons/defaultcover.png"),
   defaultAvatar: require("../icons/defaultavatar.png"),
+  pepeSad: require("../icons/PepeSad.gif"),
 };
 export default icons;

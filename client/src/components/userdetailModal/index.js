@@ -1,6 +1,6 @@
 import React,{memo, useState, useEffect} from 'react'
 import { firstLetterUppercase } from '../FirstLetterUppercase';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {FaUser} from 'react-icons/fa'
 import {BiTime, BiUpload} from 'react-icons/bi';
 import {RiUserFollowLine,RiUserUnfollowLine} from 'react-icons/ri';
@@ -14,6 +14,7 @@ function UserDetailModal({user}) {
     const [follower, setFollower ] = useState();
     const [following, setFollowing ] = useState();
     const [state, ] = useStore();
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const controller = new AbortController();
@@ -109,10 +110,10 @@ function UserDetailModal({user}) {
                     <span className='mr-1'>Follow</span>
                  </div>
                 }
-                <Link to={`/profile/${user.iduser}`} className='md:flex hidden items-center justify-center rounded  h-fit md:w-fit p-2 mr-2 bg-green-400 hover:bg-green-300 cursor-pointer shadow-md text-yellow-100 text-base leading-none'>
+                <div onClick={()=>navigate(`/profile/${user.iduser}`)} className='md:flex hidden items-center justify-center rounded  h-fit md:w-fit p-2 mr-2 bg-green-400 hover:bg-green-300 cursor-pointer shadow-md text-yellow-100 text-base leading-none'>
                         <FaUser />
                         <span className='mr-1'>Profile</span>
-                </Link>
+                </div>
             </div>
         </div>
         
