@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from './../../components/header/index';
+import HeaderHomePage from '../../components/homePageHeader';
 import Footer from './../../components/footer/index';
 
-function DefaultLayout({ children }) {
+function HomePageLayout({ children }) {
     return (
     <div className='flex flex-col'>
-        <Header/>
+        <HeaderHomePage/>
         <div>{children}</div>
         <Footer/>
     </div>)
 }
 
-export default DefaultLayout;
+export default HomePageLayout;

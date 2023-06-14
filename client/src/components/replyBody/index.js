@@ -77,13 +77,13 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
   }
   return (
     <div className=' w-full'>
-        <div className='w-40 p-2 border-x-[1px] border-t-[1px] rounded-t text-lg font-semibold bg-[#83cc15] text-yellow-100'>Bình luận:</div>
-        {replys.length ===0 || isLoading? <div className='flex items-center justify-center w-full min-h-[150px] bg-[#83cc15] border-[1px] text-xl font-medium'>Hiện Không có comment nào</div>:
+        <div className='w-40 p-2 border-x-[1px] border-t-[1px] border-[var(--sub-text-color)] rounded-t text-lg font-semibold bg-[var(--sub-bg-color)] text-[var(--primary-text-color)]'>Bình luận:</div>
+        {replys.length ===0 || isLoading? <div className='flex items-center justify-center w-full min-h-[150px] bg-[var(--sub-bg-color)] border-[1px] border-[var(--sub-text-color)] text-xl font-medium'>Hiện Không có comment nào</div>:
         currentReplys.map((reply, index)=> {
             const ref = JSON.parse(reply.replyref)
             return (
-                <div key={index} className='flex flex-col md:flex-row text-2xl w-full border-x-[1px] border-t-[1px] bg-[#83cc15] shadow-xl last:border-b-[1px]'>
-                    <div onMouseLeave={()=>setUserdetail(false)}  className='flex relative h-fit md:flex-col w-full p-2 md:w-40 justify-start items-center border-b-[1px] md:border-r-[1px] md:border-b-0'>
+                <div key={index} className='flex flex-col md:flex-row text-2xl w-full border-x-[1px] border-t-[1px] bg-[var(--sub-bg-color)] shadow-xl border-[var(--sub-text-color)] last:border-b-[1px] '>
+                    <div onMouseLeave={()=>setUserdetail(false)}  className='flex relative h-fit md:flex-col w-full p-2 md:w-40 justify-start items-center border-b-[1px] md:border-r-[1px] border-[var(--sub-text-color)] md:border-b-0'>
                       {userdetail===reply.idreply&&reply.iduser!==state.users.iduser&&
                       <UserDetailModal user={reply}/>
                       }
@@ -94,47 +94,47 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
                       </Link>
                       
                       <div className='flex flex-col ml-2'>
-                          <div className='text-lg w-fit md:max-w-[130px] md:text-center overflow-hidden text-ellipsis font-medium mb-1 text-[#d9ffa0]'>
+                          <div className='text-lg w-fit md:max-w-[130px] md:text-center overflow-hidden text-ellipsis font-medium mb-1 text-[var(--primary-text-color)]'>
                               {firstLetterUppercase(reply.username)} 
-                              {iduserpost===reply.iduser&&<span className='md:hidden text-xs text-yellow-100 ml-1'>Uploader</span>}
+                              {iduserpost===reply.iduser&&<span className='md:hidden text-xs text-[var(--sub-text-color)] ml-1'>Uploader</span>}
                           </div>
-                          <span className='md:hidden text-xs text-yellow-100'>{firstLetterUppercase(reply.usertitle)}.{Moment(reply.joindate).format("DD-MM-YYYY")}</span>
+                          <span className='md:hidden text-xs text-[var(--sub-text-color)]'>{firstLetterUppercase(reply.usertitle)}.{Moment(reply.joindate).format("DD-MM-YYYY")}</span>
                       </div>
-                     {iduserpost===reply.iduser&&<div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                     {iduserpost===reply.iduser&&<div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-[var(--primary-color)] shadow-md text-white text-base leading-none'>
                       <BiUpload className='mr-1'/>
                       Uploader
                       </div>}
-                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 my-2 text-base leading-none'>
+                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-[var(--primary-color)] shadow-md text-white my-2 text-base leading-none'>
                       <FaUser className='mr-1'/>
                       {firstLetterUppercase(reply.usertitle)}
                       </div>
-                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
+                      <div className='md:flex hidden items-center justify-center rounded  h-5 md:w-full bg-[var(--primary-color)] shadow-md text-white text-base leading-none'>
                       <BiTime className='mr-1'/>
                       {Moment(reply.joindate).format("DD-MM-YYYY")}
                       </div>
                   </div>
         
-                <div className='flex flex-col flex-1 justify-between items-center  p-2'>
-                    <div className='flex justify-between items-center w-full my-1 text-sm text-[#e3e63f]'>
-                        <div className='flex underline hover:text-[#fdff83]'>
-                            <BiTime className='w-5 h-5 mr-1'/>
-                            {Moment(reply.replydate).format("DD-MM-YYYY")}
-                        </div>
-                       
-                        {reply.iduser === state.users.iduser || state.users.usertitle === 'admin'?
-                        <div className={`relative cursor-pointer px-2 group hover:text-[#fdff83]`}>
-                            <FaEllipsisV/>
-                            <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-0 lg:right-1/2 lg:translate-x-1/2 bg-[#a4ea3c]  w-28 group-hover:flex hidden flex-col`} >
-                            <div onClick={()=>handleDeleteReply(reply.idreply)}  className='border-b-[1px] p-2 hover:bg-[#c3fa70] text-center rounded-t'>Xóa</div>
-                            <button onClick={(e)=>handleReplyUpdate(e)} data-update={JSON.stringify(reply)} className='p-2 hover:bg-[#c3fa70] text-center rounded-b'>Sửa</button>
-                            </div>
-                        </div>:<></>}
+                  <div className='flex flex-col flex-1 justify-between items-center  p-2'>
+                    <div className='flex justify-between items-center w-full my-1 text-sm text-[var(--sub-text-color)]'>
+                          <div className='flex underline hover:text-[var(--primary-text-color)]'>
+                              <BiTime className='w-5 h-5 mr-1'/>
+                              {Moment(reply.replydate).format("DD-MM-YYYY")}
+                          </div>
+                        
+                          {reply.iduser === state.users.iduser || state.users.usertitle === 'admin'?
+                          <div className={`relative cursor-pointer px-2 group hover:text-[var(--primary-text-color)]`}>
+                              <FaEllipsisV/>
+                              <div className={`absolute text-gray-600 top-5 after:top-[-10px] after:absolute after:content-[''] after:h-3 after:w-full right-0 lg:right-1/2 lg:translate-x-1/2 bg-[#a4ea3c]  w-28 group-hover:flex hidden flex-col`} >
+                              <div onClick={()=>handleDeleteReply(reply.idreply)}  className='border-b-[1px] p-2 hover:bg-[#c3fa70] text-center rounded-t'>Xóa</div>
+                              <button onClick={(e)=>handleReplyUpdate(e)} data-update={JSON.stringify(reply)} className='p-2 hover:bg-[#c3fa70] text-center rounded-b'>Sửa</button>
+                              </div>
+                          </div>:<></>}
                     </div>
                     {ref.iduserref?
-                    <div className='w-full bg-[#6eb00b]  px-2 border-l-4 border-[#bdff5a]'>
+                    <div className='w-full bg-[var(--hover-bg-color)]  px-2 border-l-4 border-[var(--sub-color)]'>
                        <div className='flex'>
-                       <div className='text-lg max-w-[130px] overflow-hidden text-ellipsis font-medium  text-[#d9ffa0]'>{ref.usernameref}</div>
-                           <div className='flex items-center underline hover:text-[#fdff83] text-sm text-[#e3e63f]'>
+                       <div className='text-lg max-w-[130px] overflow-hidden text-ellipsis font-medium  text-[var(--primary-text-color)]'>{ref.usernameref}</div>
+                           <div className='flex items-center underline text-[var(--sub-text-color) text-sm'>
                                 <BiTime className='w-5 h-5 mr-1'/>
                                 {Moment(ref.replydateref).format("DD-MM-YYYY")}
                             </div>
@@ -143,7 +143,7 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
                     </div>
                     :<></>}
                     <div className='w-full mt-2 text-xl flex-1' dangerouslySetInnerHTML={{__html: reply.replydesc}}></div>
-                    <div className='flex h-9 justify-start items-center w-full my-1 text-2xl leading-none text-[#e3e63f] bg-[#6eb00b] px-2 border-l-4 border-[#bdff5a]'>   
+                    <div className='flex h-9 justify-start items-center w-full my-1 text-2xl leading-none text-white bg-[var(--primary-color)]  px-2 border-l-4 border-[var(--sub-color)]'>   
                         <div className='flex hover:text-[#fdff83] hover:text-4xl'>
                             <MdFavorite/>
                             <span className='text-lg'>{reply.replylike}</span>
@@ -151,9 +151,7 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
                         <button className='flex ml-4 w-fit h-fit' onClick={(e)=>handleRef(e)} data-rep={JSON.stringify(reply)}>
                             <FaComment className='hover:text-[#fdff83] hover:text-4xl'/>
                         </button>
-                        <div className='flex ml-4 hover:text-[#fdff83] hover:text-4xl'>
-                            <MdReport/>
-                        </div>
+                        
                     </div>
                 </div>  
             </div>

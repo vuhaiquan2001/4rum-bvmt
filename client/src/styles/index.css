@@ -10,11 +10,17 @@ html {
 }
 
 :root {
-  --primary-bg-color: #62ac00;
-  --primary-header-color: #84dc00;
-  --sub-bg-color: #f7ffba;
-  --text-color: #203e00;
-  --sub-text-color: #2d5800;
+  --primary-color: #77b914;
+  --sub-color: #a0fb17;
+
+  --primary-bg-color: #edffe8;
+  --sub-bg-color: #f6f8fd;
+  --hover-bg-color: #e6e7ea;
+
+  --primary-text-color: #34364a;
+  --sub-text-color: #7a757d;
+  --danger-color: #f10000;
+  --sub-danger-color: #ff6969;
 }
 
 .ProseMirror:focus {

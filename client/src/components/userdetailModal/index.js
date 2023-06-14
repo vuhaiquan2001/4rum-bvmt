@@ -101,9 +101,9 @@ function UserDetailModal({user}) {
             </div>
             <div className="flex justify-end py-2 bg-slate-500 bg-opacity-70">
                 {follow?
-                <div onClick={()=>handleFollow()} className='md:flex hidden items-center justify-center rounded  h-fit md:w-fit p-2 mr-2 bg-green-400 hover:bg-green-300 cursor-pointer shadow-md text-yellow-100 text-base leading-none'>
+                <div onClick={()=>handleFollow()} className='md:flex hidden items-center justify-center rounded  h-fit md:w-fit p-2 mr-2 bg-red-400 hover:bg-red-300 cursor-pointer shadow-md text-yellow-100 text-base leading-none'>
                     <RiUserFollowLine />
-                    <span className='mr-1'>Đã Follow</span>
+                    <span className='mr-1'>Hủy Follow</span>
                 </div>:
                 <div onClick={()=>handleFollow()} className='md:flex hidden items-center justify-center rounded  h-fit md:w-fit p-2 mr-2 bg-green-400 hover:bg-green-300 cursor-pointer shadow-md text-yellow-100 text-base leading-none'>
                     <RiUserUnfollowLine />

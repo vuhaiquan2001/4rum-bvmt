@@ -1,4 +1,5 @@
-import Home from "../pages/Home";
+//import Page
+import Forum from "../pages/Forum";
 import PostList from "../pages/PostList";
 import NotFound from "../pages/NotFound";
 import Post from "../pages/Post";
@@ -11,8 +12,14 @@ import EditProfile from "../pages/editprofile";
 import Search from "../pages/Search";
 import Storage from "../pages/Storage";
 import News from "../pages/News";
+import Home from "../pages/Home";
+
+//import LayOut
+import HomePageLayout from "../Layouts/HomepageLayout";
+
 const publicRoutes = [
-  { path: "/", component: Home },
+  { path: "/", component: Home , layout: HomePageLayout},
+  { path: "/forum", component: Forum },
   { path: "/postlist/:idtopic", component: PostList },
   { path: "/news/:keyword", component: News },
   { path: "/post/:idpost", component: Post },

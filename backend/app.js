@@ -93,10 +93,9 @@ const connection = mysql.createConnection({
     const {id}= req.params;
     const sql = "SELECT * FROM posts, user_detail where posts.iduser=user_detail.iduser and idpost=?";
     connection.query(sql, id,(err, results) =>{
-      if(results){
+      if(results.length>0){
         const viewquantity=JSON.parse(JSON.stringify(results))[0].viewquantity +1;
         connection.query('update posts set viewquantity=? where idpost=?',[viewquantity,id],(err,rs)=>{
-          
         })
         res.json(results)
       } else{

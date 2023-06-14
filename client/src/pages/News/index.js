@@ -31,41 +31,71 @@ function News() {
       switch (keyword) {
         case 'newest':
           axios.get(`/api/newestpost`).then((res)=>{
+           if(res.data.message){
+            setPosts([])
+            setLoading(false);
+            setpostType('Bài viết mới nhất!')
+           } else {
             setPosts(res.data)
             setLoading(false);
             setpostType('Bài viết mới nhất!')
+           }
           })
           .catch(e=>{})
           break;
         case 'follower':
           axios.get(`/api/followingpost/${state.users.iduser}`).then((res)=>{
+           if(res.data.message){
+            setPosts([])
+            setLoading(false);
+            setpostType('Bài viết bạn theo dõi!')
+           } else {
             setPosts(res.data)
             setLoading(false);
             setpostType('Bài viết bạn theo dõi!')
+           }
           })
           .catch(e=>{})
           break;
         case 'mostview':
           axios.get(`/api/themostviews`).then((res)=>{
+           if(res.data.message){
+            setPosts([])
+            setLoading(false);
+            setpostType('Bài viết nhiều lượt xem nhất!')
+           } else {
             setPosts(res.data)
             setLoading(false);
             setpostType('Bài viết nhiều lượt xem nhất!')
+           } 
           })
           .catch(e=>{})
           break;
         case 'mostvote':
           axios.get(`/api/themostvotes`).then((res)=>{
+           if(res.data.message){
+            setPosts([])
+            setLoading(false);
+            setpostType('Bài viết nhiều Vote nhất!')
+           } else {
             setPosts(res.data)
             setpostType('Bài viết nhiều Vote nhất!')
             setLoading(false);
+           }
           })
           .catch(e=>{})
           break;
         case 'mostcomment':
           axios.get(`/api/themostreplys`).then((res)=>{
+           if(res.data.message){
+            setPosts([])
+            setLoading(false);
+            setpostType('Bài viết sôi nổi nhất!')
+           } else {
             setPosts(res.data)
             setpostType('Bài viết sôi nổi nhất!')
             setLoading(false);
+           }
           })
           .catch(e=>{})
           break;
@@ -82,7 +112,7 @@ function News() {
   const handleSort =()=>{
     sort()
   } 
-  
+  console.log(posts)
   const handleSortType =()=>{
     sort();
   } 
@@ -131,10 +161,10 @@ function News() {
           <span className='text-[#d9ffba] pl-2'>{postType}</span>
       </div>
       {loading?
-      <div>Loading</div>
+      <div className='min-h-screen max-w-7xl w-full bg-slate-400 text-center text-lg animate-pulse'>Loading</div>
       :<>
       {posts.length<=0?
-      <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+      <div className='flex flex-col max-w-7xl w-full min-h-[100vh] justify-center items-center text-xl font-semibold text-[var(--primary-text-color)]'>
       Bài viết không tồn tại <img src={icons.pepeSad} alt='pepe'/>
      </div>
       :<div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 

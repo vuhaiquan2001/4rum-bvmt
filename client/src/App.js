@@ -1,17 +1,20 @@
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { React, Fragment } from "react";
+import { React, Fragment, useState } from "react";
 import { publicRoutes } from "./router";
 import DefaultLayout from "./Layouts/defaultLayout";
-import Header from "./components/header";
-import Footer from "./components/footer";
+import ScrollToTopBtn from "./components/ScrollButton";
 
 function App() {
+  const [yoffset, SetYOffSet] = useState(0)
+  window.onscroll = (e) => {
+      SetYOffSet(window.scrollY.toFixed(0))
+  }
+
   return (
     <Router>
-      <div className="App flex flex-col">
-        <Header />
-       <div className="mt-[56px]">
+      <div className="App mt-[56px]">
+       
           <Routes>
             {publicRoutes.map((route, index) => {
               const Page = route.component;
@@ -34,8 +37,9 @@ function App() {
               );
             })}
           </Routes>
-       </div>
-        <Footer />
+
+        {yoffset>500&&<ScrollToTopBtn/>}
+
       </div>
     </Router>
   );

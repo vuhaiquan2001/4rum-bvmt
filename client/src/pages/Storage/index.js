@@ -38,23 +38,23 @@ function Storage() {
     }, [state.users, select])
   return (
     <main className='flex justify-center w-full mt-5 '>
-        <div className='max-w-7xl w-full shadow-md'>
-            <ul className="flex bg-[#8fdf20] border-b-[2px] rounded-t">
-                <li className={`p-2 ${select === 'bookmark'? 'border-[2px] rounded-t mb-[-2px] border-b-0 bg-[#a3e635]':''}`} onClick={()=>setSelect('bookmark')}>
+        <div className='max-w-7xl w-full shadow-lg-around'>
+            <div className="flex bg-[var(--primary-color)] text-white text-lg font-medium">
+                <div className={`p-2 ${select === 'bookmark'? ' bg-[var(--sub-color)]':''}`} onClick={()=>setSelect('bookmark')}>
                     Đã Bookmark
-                </li>    
-                <li className={`p-2 ${select === 'votepost'? 'border-[2px] rounded-t mb-[-2px] border-b-0 bg-[#a3e635]':''}`} onClick={()=>setSelect('votepost')}>
+                </div>    
+                <div className={`p-2 ${select === 'votepost'? 'bg-[var(--sub-color)]':''}`} onClick={()=>setSelect('votepost')}>
                     Đã thích
-                </li>     
-            </ul>
+                </div>     
+            </div>
             {isLoading?
-                <div className='w-full bg-[#a3e635] border-x-[2px] border-b-[2px] rounded-b min-h-screen animate-pulse'></div>
+                <div className='w-full bg-[var(--sub-bg-color)]  rounded-b min-h-screen animate-pulse'></div>
                 :
-                <section className='flex flex-col  bg-[#a3e635] border-x-[2px] border-b-[2px] rounded-b min-h-screen'>
+                <section className='flex flex-col  bg-[var(--sub-bg-color)] rounded-b min-h-screen'>
                 {
                 posts.map((post,index)=>(
-                    <Link
-                        className='flex flex-col md:flex-row justify-between items-center border-[2px] md:border-[1px] mt-[-1px]  bg-[#a3e635] hover:bg-[#b3ff50] hover:text-[#60961a]' 
+                    <Link key={index}
+                        className='flex flex-col md:flex-row justify-between items-center border-[2px] md:border-[1px] border-[var(--sub-text-color)] mt-[-1px]  bg-[var(--sub-bg-color)] hover:bg-[var(--hover-bg-color)]' 
                         to={`/post/${post.idpost}`}>
                         <div className='flex flex-row py-4 w-full md:w-[75%] border-b-[1px] md:border-r-[1px] text-ellipsis max-h-24'>
                             <div className='rounded-full h-14 w-14  mx-2  bg-[#e1ffb4] '>

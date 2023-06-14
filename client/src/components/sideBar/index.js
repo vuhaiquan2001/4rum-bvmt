@@ -23,7 +23,7 @@ function SideBar() {
     }, [])
   return (
     <>
-    <div className='border-b-[3px] p-2 h-fit'>
+    <div className='bg-[var(--sub-bg-color)] border-b-[3px] p-2 h-fit text-[var(--primary-text-color)]'>
       <span className='text-center text-lg font-medium'>Theo dõi chúng tôi tại:</span>
       <div className="lg:mr-2 lg:mt-0 mt-3 w-full flex justify-between">
         <Link
@@ -49,22 +49,22 @@ function SideBar() {
         </Link>
       </div>
     </div>
-    <div className='border-b-[3px] p-2 text-base font-medium text-yellow-100'>
-      Xin chào {state.users.username?<span className='text-lg font-semibold text-yellow-100'>{state.users.username}</span>:<Link to={'/login'} className='underline text-base text-blue-800'>Đăng nhập ngay</Link>}
+    <div className='bg-[var(--sub-bg-color)] border-b-[3px] p-2 text-base font-medium text-'>
+      Xin chào {state.users.username?<span className='text-lg font-semibold '>{state.users.username}</span>:<Link to={'/login'} className='underline text-base text-blue-800'>Đăng nhập ngay</Link>}
     </div>
-    <div className='flex flex-col border-b-[3px]'>
+    <div className='bg-[var(--sub-bg-color)] flex flex-col border-b-[3px]'>
       <span className='text-center text-lg font-medium'>Bài viết</span>
-      <Link to={`/news/follower`} className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết bạn theo dõi</Link>
-      <Link to={`/news/newest`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết mới nhất</Link>
-      <Link to={`/news/mostview`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết nhiều lượt xem nhất</Link>
+      <Link to={`/news/follower`} className='border-b-[1px] p-2 hover:bg-[var(--sub-color)]'>Bài viết bạn theo dõi</Link>
+      <Link to={`/news/newest`} className='border-y-[1px] p-2 hover:bg-[var(--sub-color)]'>Bài viết mới nhất</Link>
+      <Link to={`/news/mostview`} className='border-y-[1px] p-2 hover:bg-[var(--sub-color)]'>Bài viết nhiều lượt xem nhất</Link>
 
-      <Link to={`/news/mostvote`} className='border-y-[1px] p-2 hover:bg-[#acf83a]'>Bài viết nhiều lượt Vote nhất</Link>
-      <Link to={`/news/mostcomment`} className='border-b-[1px] p-2 hover:bg-[#acf83a]'>Bài viết sôi nổi nhất</Link>
+      <Link to={`/news/mostvote`} className='border-y-[1px] p-2 hover:bg-[var(--sub-color)]'>Bài viết nhiều lượt Vote nhất</Link>
+      <Link to={`/news/mostcomment`} className='border-b-[1px] p-2 hover:bg-[var(--sub-color)]'>Bài viết sôi nổi nhất</Link>
     </div>
-    {!isLoading&&<div className='flex flex-col border-b-[3px] '>
+    {!isLoading&&<div className='bg-[var(--sub-bg-color)] flex flex-col border-b-[3px] '>
         <span className='text-center text-lg font-medium'>Người dùng tiêu biểu</span>
         {top.map((user,index)=>(
-            <Link key={index} to={`/profile/${user.iduser}`} className='flex p-2 items-center justify-between hover:bg-[#acf83a]'>
+            <Link key={index} to={`/profile/${user.iduser}`} className='flex p-2 items-center justify-between hover:bg-[var(--sub-color)]'>
                 <div className='flex items-center'>
                     <div className='rounded-full h-10 w-10 mr-2  bg-[#e1ffb4] '>
                         <img 

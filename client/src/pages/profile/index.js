@@ -101,13 +101,13 @@ function Profile() {
                                     <div className="py-6 flex justify-center px-3 mt-32 lg:mt-0">
                                         {state.users.iduser !== user.iduser? 
                                         (follow?
-                                        <div onClick={()=>handleFollow()} className="bg-red-500 active:bg-red-600 hover:bg-red-300 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 w-28 text-center rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
+                                        <div onClick={()=>handleFollow()} className="bg-[var(--danger-color)] active:bg-[var(--sub-danger-color)] hover:bg-[var(--sub-danger-color)] uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 w-28 text-center rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
                                             UnFollow
                                         </div>
-                                        :<div onClick={()=>handleFollow()} className="bg-green-500 active:bg-green-600 hover:bg-green-300 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 w-28 text-center rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
+                                        :<div onClick={()=>handleFollow()} className="bg-[var(--primary-color)] active:[var(--sub-color)] hover:bg-[var(--sub-color)] uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 w-28 text-center rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
                                             Follow
                                         </div>)
-                                        :<Link to={`/editprofile/${user.iduser}`} className="bg-green-500 active:bg-green-600 hover:bg-green-300 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
+                                        :<Link to={`/editprofile/${user.iduser}`} className="bg-[var(--primary-color)] active:[var(--sub-color)] hover:bg-[var(--sub-color)] uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150">
                                             Chỉnh sửa
                                         </Link>
                                         }      
@@ -143,11 +143,11 @@ function Profile() {
                                 </div>
                                 }
                             </div>
-                            <div className='flex flex-col my-2 bg-lime-400'>
-                                <div className='flex border-b-[1px] bg-lime-500 text-lg font-semibold text-yellow-100'>
-                                    <span onClick={()=>setTable('post')} className={`px-2 ${table==='post'?'bg-lime-400':''}  flex hover:bg-lime-400 cursor-pointer`}>Posts</span>
-                                    <span onClick={()=>setTable('follower')} className={`px-2 ${table==='follower'?'bg-lime-400':''} border-r-[1px] flex hover:bg-lime-400 cursor-pointer`}>Follower</span>
-                                    <span onClick={()=>setTable('following')} className={`px-2 ${table==='following'?'bg-lime-400':''} border-r-[1px] flex hover:bg-lime-400 cursor-pointer`}>Following</span>
+                            <div className='flex flex-col my-2 bg-[var(--sub-color)]'>
+                                <div className='flex border-b-[1px] bg-[var(--primary-color)] text-lg font-semibold text-white'>
+                                    <span onClick={()=>setTable('post')} className={`px-2 ${table==='post'?'bg-[var(--sub-color)]':''}  flex hover:bg-[var(--sub-color)] cursor-pointer`}>Posts</span>
+                                    <span onClick={()=>setTable('follower')} className={`px-2 ${table==='follower'?'bg-[var(--sub-color)]':''} border-r-[1px] flex hover:bg-[var(--sub-color)] cursor-pointer`}>Follower</span>
+                                    <span onClick={()=>setTable('following')} className={`px-2 ${table==='following'?'bg-[var(--sub-color)]':''} border-r-[1px] flex hover:bg-[var(--sub-color)] cursor-pointer`}>Following</span>
                                 </div>
                                 {table==='post'?<ProfilePost iduser={user.iduser}/>:(table==='follower'?
                                 <FollowerTable iduser={user.iduser}/>:

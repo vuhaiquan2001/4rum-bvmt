@@ -33,13 +33,13 @@ function ProfilePost({iduser}) {
         {currentPosts.map((post,index)=>(
             <Link
             key={index}
-            className='flex flex-col lg:flex-row justify-between items-center border-[1px] mt-[-1px]  bg-[#a3e635] hover:bg-[#b3ff50] hover:text-[#60961a]' 
+            className='flex flex-col lg:flex-row justify-between items-center border-[1px] mt-[-1px]  bg-[var(--sub-bg-color)] hover:bg-[var(--hover-bg-color)]' 
             to={`/post/${post.idpost}`}>
                 <div className='flex py-4 w-full lg:w-[75%] text-ellipsis h-fit'>
                     <div className='flex flex-col lg:flex-row justify-between flex-1 px-2'>
                         <div className='h-8 max-w-[200px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[800px] whitespace-nowrap overflow-hidden text-ellipsis'>
                             <span className='text-lg font-medium text-[var(--text-color)] hover:underline hover:text-[#851210] text-ellipsis'>
-                            {post.posttitle}ádasdsadasdas  ád á  ádasdasdadad ádasd ádasdasd 
+                            {post.posttitle}
                             </span>
                         </div>
                         <div className='flex flex-wrap'>

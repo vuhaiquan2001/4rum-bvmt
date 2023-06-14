@@ -109,23 +109,23 @@ function Search() {
     <>
     {postsearch?  
     <div className='p-5 flex  flex-col  items-center select-none'>
-      <div className='text-2xl max-w-7xl mb-4 p-2 w-full border-y-[1px] border-r-[1px] border-l-8 border-[#94e619] bg-[#56870c] shadow-lg shadow-[#8cd124]'>
-          <span className='text-[#d9ffba] pl-2'>Kết quả tìm kiếm bài viết cho: {keyword}</span>
+      <div className='text-2xl max-w-7xl mb-4 p-2 w-full border-y-[1px] border-r-[1px] border-l-8 border-[var(--sub-color)] bg-[var(--primary-color)] shadow-lg-around'>
+          <span className='text-white pl-2'>Kết quả tìm kiếm bài viết cho: {keyword}</span>
       </div>
-      <div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 
-        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
-          <div className='cursor-pointer rounded border-[1px] p-1 hover:bg-green-500' onClick={()=>setPostSearch(false)}>Search: Users</div>
+      <div className='w-full max-w-7xl min-h-[100vh] bg-[var(--sub-bg-color)] shadow-lg-around h-auto flex flex-col rounded overflow-hidden'> 
+        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[var(--sub-text-color)] text-white shadow-xl'>
+          <div className='cursor-pointer rounded border-[1px] p-1 hover:bg-[var(--primary-text-color)]' onClick={()=>setPostSearch(false)}>Search: Users</div>
           <section className='flex justify-between w-full md:justify-start lg:w-fit '>
             <span className='hidden md:block mr-1'>Sắp xếp theo:</span> 
             <div className='flex'>
-              <select defaultValue={'ngaytao'} onChange={()=>handleSort()} ref={sortRef} className='flex mr-1 cursor-pointer select-none'>
+              <select defaultValue={'ngaytao'} onChange={()=>handleSort()} ref={sortRef} className='flex text-[var(--primary-text-color)] mr-1 cursor-pointer select-none'>
                 <option value='ngaytao' className='mr-1 bg-slate-500 rounded p-1'>Ngày đăng</option>
                 <option value='postupdate' className='mr-1 bg-slate-500 rounded p-1'>Ngày Update</option>
                 <option value='viewquantity' className='mr-1 bg-slate-500 rounded p-1'>Views</option>
                 <option value='commentquantity' className='mr-1 bg-slate-500 rounded p-1'>Comments</option>
                 <option value='likequantity' className='mr-1 bg-slate-500 rounded p-1'>Votes</option>
               </select>
-              <select className='cursor-pointer' defaultValue='desc' onChange={()=>handleSortType()} ref={sortTypeRef}>
+              <select className='cursor-pointer text-[var(--primary-text-color)]' defaultValue='desc' onChange={()=>handleSortType()} ref={sortTypeRef}>
                 <option value='desc'>Giảm dần</option>
                 <option value='asc'>Tăng dần</option>
               </select>
@@ -150,12 +150,12 @@ function Search() {
     </div>
   :
     <div className='p-5 flex  flex-col  items-center'>
-      <div className='text-2xl max-w-7xl mb-4 p-2 w-full border-y-[1px] border-r-[1px] border-l-8 border-[#94e619] bg-[#56870c] shadow-lg shadow-[#8cd124]'>
-          <span className='text-[#d9ffba] pl-2'>Kết quả tìm kiếm người dùng cho: {keyword}</span>
+      <div className='text-2xl max-w-7xl mb-4 p-2 w-full border-y-[1px] border-r-[1px] border-l-8 border-[var(--sub-color)] bg-[var(--primary-color)] shadow-lg-around'>
+          <span className='text-white pl-2'>Kết quả tìm kiếm người dùng cho: {keyword}</span>
       </div>
-      <div className='w-full max-w-7xl min-h-[100vh] bg-[#84cc16] h-auto flex flex-col rounded overflow-hidden'> 
-        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[#8fdf20] shadow-xl'>
-          <div className='cursor-pointer rounded border-[1px] p-1 hover:bg-green-500' onClick={()=>setPostSearch(true)}>Search: Post</div>
+      <div className='w-full max-w-7xl min-h-[100vh] bg-[var(--sub-bg-color)] shadow-lg-around  h-auto flex flex-col rounded overflow-hidden'> 
+        <div className='flex items-center justify-between flex-wrap sm:flex-nowrap px-2 w-full min-h-[60px] bg-[var(--sub-text-color)] text-white shadow-xl'>
+          <div className='cursor-pointer rounded border-[1px] p-1 hover:bg-[var(--primary-text-color)]' onClick={()=>setPostSearch(true)}>Search: Post</div>
         </div>
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
@@ -164,51 +164,29 @@ function Search() {
               Người dùng này không tồn tại <img src={icons.pepeSad} alt='pepe'/>
             </div>:
            <>
-              {currentUsers.map((post, index) => (
-                  <Link style={{backgroundImage: `url("${post.usercoverimg}")`}} to={`/profile/${post.iduser}`} key={index} 
-                  className='flex w-full h-56 justify-start items-center border-[1px] bg-top bg-cover bg-[#8fdf20] backdrop-opacity-10 mb-2 hover:bg-blend-darken'>
-                    <div onMouseLeave={()=>setUserdetail(false)} className='flex relative flex-col ml-2 items-center p-2 border-r-[1px]'>
-                        {userdetail===post.iduser&&
-                        <UserDetailModal user={post}/>
-                        }
-                      <div onMouseEnter={()=>handleHover(post.iduser)} className='rounded-full h-24 w-24 bg-[#e1ffb4] border-[2px] border-green-800'>
+              {currentUsers.map((user, index) => (
+                  <Link onMouseLeave={()=>setUserdetail(false)} to={`/profile/${user.iduser}`} key={index} className='flex flex-col items-start bg-[var(--sub-bg-color)] hover:bg-[var(--hover-bg-color)] md:flex-row relative md:items-center justify-between p-1 border-b-[1px]'>
+                  {userdetail===user.iduser&&
+                  <UserDetailModal user={user}/>
+                  }
+                  <div className='flex items-center flex-1 w-full'> 
+                      <div onMouseEnter={()=>handleHover(user.iduser)} className='rounded-full h-14 w-14  mx-2  bg-[#e1ffb4] '>
                           <img 
                           className='rounded-full w-full h-full object-cover'
-                          src={post.useravatar} alt='avatar'/>
+                          src={user.useravatar} alt='avatar'/>
                       </div>
-                      <div className='text-lg max-w-[130px] text-center overflow-hidden text-ellipsis font-medium bg-green-400 rounded my-2 px-1 text-[#d9ffa0]'>{firstLetterUppercase(post.username)}</div>
-                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                        <FaUser className='mr-1'/>
-                        {firstLetterUppercase(post.usertitle)}
+                      <div className='flex items-center'>
+                          <span className='flex items-center text-white h-fit capitalize text-base font-semibold py-1 px-2 bg-green-500 hover:bg-green-400 rounded mr-1'>{user.usertitle}</span>
+                          <span className='flex items-center mr-1 text-base font-semibold text-[--primary-text-color]'>{user.username}</span>
+                          <span className='hidden text-[--sub-text-color] sm:flex items-center flex-1 text-sm font-medium italic overflow-hidden text-ellipsis bg-slate-400 bg-opacity-30'>"{user.userdesc!==''?user.userdesc:'Không có mô tả.'}"</span>
                       </div>
-                      <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                        <BiTime className='mr-1'/>
-                        {Moment(post.joindate).format("DD-MM-YYYY")}
-                      </div>
-                    </div>
-                    {post.userdesc !== ""?
-                    <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
-                      {post.userdesc}
-                    </div>:
-                    <div className='flex flex-col text-lg font-semibold text-yellow-100 w-full h-40 mx-2 p-2 rounded hover:bg-green-300 bg-green-400'>
-                      Không có mô tả!
-                    </div>  
-                    } 
-                    <div  className='flex flex-col h-full ml-2 items-center justify-center p-2 border-l-[1px]'>
-                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                        <FaUser className='mr-1'/>
-                        Follower: {post.followerCount}
-                      </div>
-                      <div className='flex items-center justify-center rounded mb-2 h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                        <FaUser className='mr-1'/>
-                        Following: {post.followingCount}
-                      </div>
-                      <div className='flex items-center justify-center rounded  h-7 w-32 bg-green-400 shadow-md text-yellow-100 text-base leading-none'>
-                        <BiTime className='mr-1'/>
-                        Bài viết: {post.postCount}
-                      </div>
-                    </div>
-                </Link>
+                  </div>
+                  <div className='flex w-fit px-2 py-2 md:py-0'>
+                      <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-[--primary-text-color]'>Posts: <p className='ml-1 text-end text-lg font-semibold text-[--sub-text-color]'>{user.postCount}</p></span>
+                      <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-[--primary-text-color]'>Follower: <p className='ml-1 text-end text-lg font-semibold text-[--sub-text-color]'>{user.followerCount}</p></span>
+                      <span className='ml-2 text-sm sm:text-base font-medium flex items-center text-[--primary-text-color]'>Following: <p className='ml-1 text-end text-lg font-semibold text-[--sub-text-color]'>{user.followingCount}</p></span>
+                  </div>
+              </Link>
               ))}
             </>}
           </div>
