@@ -13,13 +13,16 @@ import Search from "../pages/Search";
 import Storage from "../pages/Storage";
 import News from "../pages/News";
 import Home from "../pages/Home";
+import Dashboards from "../pages/DashBoard";
 
 //import LayOut
 import HomePageLayout from "../Layouts/HomepageLayout";
+import DashboardsLayout from "../Layouts/dasboardLayout";
 
 const publicRoutes = [
   { path: "/", component: Home , layout: HomePageLayout},
   { path: "/forum", component: Forum },
+  { path: "/dashboards", component: Dashboards, layout: DashboardsLayout },
   { path: "/postlist/:idtopic", component: PostList },
   { path: "/news/:keyword", component: News },
   { path: "/post/:idpost", component: Post },

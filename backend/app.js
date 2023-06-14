@@ -88,6 +88,14 @@ const connection = mysql.createConnection({
     });
     }); 
 
+    // lấy bài 10 viết nhiều views nhất
+  app.get('/api/top10views', (req, res) => {
+    var sql = "SELECT * FROM posts, user_detail where not idtopic=1 and posts.iduser=user_detail.iduser order by viewquantity desc Limit 10";
+    connection.query(sql, (err, results) =>{
+      if (err) throw err;
+      res.json(results);
+    });
+    }); 
   //api cho chi tiết bài viết theo id bài viết
   app.get('/api/postdetail/:id', (req, res) => {
     const {id}= req.params;

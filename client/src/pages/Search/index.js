@@ -3,11 +3,7 @@ import { useParams } from 'react-router-dom'
 import Pagination from '../../components/paginations';
 import axios from 'axios';
 import PostOfPostList from '../../pages/PostList/post';
-import {FaUser} from 'react-icons/fa';
-import {BiTime} from 'react-icons/bi';
 
-import Moment from 'moment';
-import { firstLetterUppercase } from '../../components/FirstLetterUppercase';
 import { Link } from 'react-router-dom';
 import UserDetailModal from '../../components/userdetailModal';
 import icons from '../../assets/icons';

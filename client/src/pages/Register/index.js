@@ -30,7 +30,7 @@ function Register() {
             setTimeout(() => {
               localStorage.setItem("userinfo", JSON.stringify(...res.data));
               dispatch(action.setUser(...res.data));
-              navigate('/')
+              navigate('/forum')
             }, 1000);
           }
         })
@@ -52,7 +52,7 @@ function Register() {
   }
   return (
     <div className='flex justify-center w-screen mt-10'>
-      <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#84dc00] justify-center px-6 py-12 lg:px-8">
+      <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#d0fc8e] justify-center px-6 py-12 lg:px-8">
         {toast? <Toast text={'Đăng ký thành công'}/>:<React.Fragment/>}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto h-10 w-auto"  src={require("../../assets/logo/bvmtLogo.png")} alt="Logo"/>

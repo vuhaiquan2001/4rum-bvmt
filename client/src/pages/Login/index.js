@@ -20,7 +20,7 @@ function Login() {
         } else {
           localStorage.setItem("userinfo", JSON.stringify(...res.data));
           dispatch(action.setUser(...res.data));
-          navigate('/')
+          navigate('/forum')
         }
       })
   }
@@ -47,7 +47,7 @@ function Login() {
 
   return (
     <div className='flex min-h-[625px] justify-center w-screen mt-10'>
-      <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#84dc00] justify-center px-6 py-12 lg:px-8">
+      <div className="flex lg:max-w-[1200px] w-full min-h-full flex-col bg-[#d0fc8e] justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-10 w-auto"  src={require("../../assets/logo/bvmtLogo.png")} alt="Logo"/>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-green-900">Đăng nhập tài khoản của bạn</h2>

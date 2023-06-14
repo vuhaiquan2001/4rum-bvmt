@@ -112,7 +112,7 @@ function News() {
   const handleSort =()=>{
     sort()
   } 
-  console.log(posts)
+  
   const handleSortType =()=>{
     sort();
   } 

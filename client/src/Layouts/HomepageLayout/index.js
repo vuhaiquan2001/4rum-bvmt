@@ -4,7 +4,7 @@ import Footer from './../../components/footer/index';
 
 function HomePageLayout({ children }) {
     return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col mt-[56px]'>
         <HeaderHomePage/>
         <div>{children}</div>
         <Footer/>

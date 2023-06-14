@@ -1,7 +1,7 @@
 import React, {useState, useEffect, memo} from 'react';
 import {FaUser,FaEllipsisV,FaComment} from 'react-icons/fa';
 import {BiTime, BiUpload} from 'react-icons/bi';
-import{MdFavorite, MdReport} from 'react-icons/md'
+import{MdFavorite} from 'react-icons/md'
 
 import { useParams, Link } from 'react-router-dom';
 import axios from "axios";

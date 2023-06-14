@@ -1,6 +1,6 @@
 import React,{memo, useState, useEffect} from 'react'
 import { firstLetterUppercase } from '../FirstLetterUppercase';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {FaUser} from 'react-icons/fa'
 import {BiTime, BiUpload} from 'react-icons/bi';
 import {RiUserFollowLine,RiUserUnfollowLine} from 'react-icons/ri';

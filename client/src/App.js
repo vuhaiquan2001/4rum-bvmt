@@ -13,8 +13,7 @@ function App() {
 
   return (
     <Router>
-      <div className="App mt-[56px]">
-       
+      <div className="App"> 
           <Routes>
             {publicRoutes.map((route, index) => {
               const Page = route.component;
@@ -37,9 +36,7 @@ function App() {
               );
             })}
           </Routes>
-
         {yoffset>500&&<ScrollToTopBtn/>}
-
       </div>
     </Router>
   );

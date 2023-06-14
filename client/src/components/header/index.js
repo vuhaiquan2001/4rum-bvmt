@@ -1,10 +1,12 @@
 import React, { useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import { useStore, action} from '../../store';
+
 import {FaUserEdit,FaUserAlt,FaBook,FaUser} from 'react-icons/fa';
 import {AiOutlineSearch,AiOutlineMenu, AiOutlineGlobal} from 'react-icons/ai';
-
 import {IoCreate} from 'react-icons/io5';
+import {RiAdminFill} from 'react-icons/ri'
+
 import { useNavigate } from "react-router-dom";
 
 import { firstLetterUppercase } from '../FirstLetterUppercase';
@@ -109,6 +111,7 @@ export default function Header() {
                   <Link to={`/profile/${user.iduser}`} className="p-3 flex item-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] hover:text-[var(--sub-text-color)]"><FaUserAlt className='mr-1'/> Trang cá nhân</Link>
                   <Link to={`/editprofile/${user.iduser}`} className="p-3 flex item-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] hover:text-[var(--sub-text-color)]"><FaUserEdit  className='mr-1 text-2xl'/>Sửa thông tin</Link>
                   <Link to={`/storage`} className="p-3 flex item-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] hover:text-[var(--sub-text-color)]"><FaBook  className='mr-1'/>Kho của bạn</Link>      
+                  {user.usertitle==='admin'?<Link to={`/dashboards`} className="p-3 flex item-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] hover:text-[var(--sub-text-color)]"><RiAdminFill  className='mr-1 text-xl'/>Admin Dashboards</Link>:<></>}
                   <div onClick={()=>handleLogout()} className="p-3 whitespace-nowrap text-base font-semibold text-[var(--danger-color)] border-b-[1px] hover:text-[var(--sub-danger-color)]">Đăng xuất</div>
                 </div>            
               </div>
@@ -145,6 +148,7 @@ export default function Header() {
             <Link onClick={()=>setopenSideMenu(false)} to={`/profile/${user.iduser}`} className="p-3 w-full  flex justify-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] border-[var(--sub-text-color)] hover:text-[var(--sub-text-color)]"><FaUserAlt className='mr-1'/> Trang cá nhân</Link>
             <Link onClick={()=>setopenSideMenu(false)} to={`/editprofile/${user.iduser}`} className="p-3 w-full flex justify-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] border-[var(--sub-text-color)] hover:text-[var(--sub-text-color)]"><FaUserEdit  className='mr-1 text-2xl'/>Sửa thông tin</Link>
             <Link onClick={()=>setopenSideMenu(false)} to={`/storage`} className="p-3 w-full flex justify-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] border-[var(--sub-text-color)] hover:text-[var(--sub-text-color)]"><FaBook  className='mr-1'/>Kho của bạn</Link>      
+            {user.usertitle==='admin'?<Link onClick={()=>setopenSideMenu(false)} hidden={user.usertitle==='admin'?false:true} to={`/dashboards`} className="p-3 w-full flex justify-center leading-none whitespace-nowrap text-base font-semibold border-b-[1px] border-[var(--sub-text-color)] hover:text-[var(--sub-text-color)]"><RiAdminFill  className='mr-1 text-xl'/>Admin dashboard</Link>:<></>}
             <div  onClick={()=>handleLogout()} className="p-3 flex justify-center w-full whitespace-nowrap text-base font-semibold text-[var(--danger-color)] border-b-[1px] border-[var(--sub-text-color)] hover:text-[var(--sub-danger-color)]">Đăng xuất</div>
           </div>  
         </div>}
