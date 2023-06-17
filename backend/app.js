@@ -603,18 +603,15 @@ const connection = mysql.createConnection({
     })
   })
   //DELETE API
-  app.get('/api/deletepost/:id', (req, res) => {
+  app.delete('/api/deletepost/:id', (req, res) => {
     const {id}= req.params;
     const sql = "Delete from posts where idpost=?";
     connection.query(sql, id,(err, results) =>{
       if (results){
-        connection.query('select count(idpost) as count from posts where idpost=?', id, (err,rs)=>{
-          if(rs){
-            const postcount = JSON.parse(JSON.stringify(rs))[0].count
-            connection.query('update user_detail set postCount=? where idpost=?',[postcount, id])
-          }
-        })
+        connection
         res.json(results);
+      } else {
+        res.json({message: err})
       }
     });
   })
@@ -634,4 +631,97 @@ const connection = mysql.createConnection({
       }
     });
   })
+
+
+  // ADMIN DASHBOARD API
+
+  //Start User
+  //Get all user
+  app.get('/api/alluser', (req, res) => {
+    const sql = "SELECT * FROM users inner join user_detail on users.iduser=user_detail.iduser where user_detail.usertitle <> 'admin'";
+    connection.query(sql, (err, results) =>{
+      if(results){
+      res.json(results);
+      } else {
+        res.json({message: 'Không xác định được user'})
+      }
+    });
+  })
+  //Chat Ban User
+  //End User
+  //Post
+  //Get all post
+  app.get('/api/allpost', (req, res) => {
+    const sql = "SELECT * FROM posts";
+    connection.query(sql, (err, results) =>{
+      if(results){
+      res.json(results);
+      } else {
+        res.json({message: 'Không xác định được bài viết'})
+      }
+    });
+  })
+  // LOCK POST - UNLOCKPOST
+  app.patch('/api/lockpost', (req, res) =>{
+    const {idpost, bool}= req.body;
+    const postclose = bool===1?false:true
+    connection.query('update posts set postclose=? where idpost=?',[postclose, idpost], (err, rs)=>{
+      if(rs.changedRows !==0){
+        res.json(rs)
+      } else {
+        res.json({message: 'Không thể cập nhật'})
+      }
+    })
+  })
+  // reply
+  //Get all reply
+  app.get('/api/allreply', (req, res) => {
+    const sql = "SELECT * FROM replys";
+    connection.query(sql, (err, results) =>{
+      if(results){
+      res.json(results);
+      } else {
+        res.json({message: 'Không xác định được bình luận'})
+      }
+    });
+  })
+
+  //Topic
+  //add topic
+  app.post('/api/addtopic', (req, res) => {
+    const {topicname, topicfor}= req.body;
+    const sql = "insert into topics (topicname, topicfor) values (?,?)";
+    connection.query(sql, [topicname, topicfor],(err, results) =>{
+      if(err){
+        res.json({message: err})
+      } else {
+        res.json(results);
+      }
+    });
+  })
+  //update topic
+  app.patch('/api/updatetopic', (req, res) => {
+    const {topicname, topicfor, idtopic}= req.body;
+    const sql = "update topics set topicname=?, topicfor=? where idtopic=? ";
+    connection.query(sql, [topicname, topicfor, idtopic],(err, results) =>{
+      if(err){
+        res.json({message: err})
+      } else {
+        res.json(results);
+      }
+    });
+  })
+  //delete topic
+  app.delete('/api/deletetopic/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "Delete from topics where idtopic=?";
+    connection.query(sql, id,(err, results) =>{
+      if(err){
+        res.json({message: err});
+      } else {
+        res.json(results);
+      }
+    });
+  })
+
 app.listen(4000, () => console.log('App listening on port 4000'));

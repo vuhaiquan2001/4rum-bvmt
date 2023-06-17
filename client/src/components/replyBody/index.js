@@ -78,8 +78,9 @@ function ReplyBody({setdata, myRef, setrerender, setreplyupdate, iduserpost}) {
   return (
     <div className=' w-full'>
         <div className='w-40 p-2 border-x-[1px] border-t-[1px] border-[var(--sub-text-color)] rounded-t text-lg font-semibold bg-[var(--sub-bg-color)] text-[var(--primary-text-color)]'>Bình luận:</div>
-        {replys.length ===0 || isLoading? <div className='flex items-center justify-center w-full min-h-[150px] bg-[var(--sub-bg-color)] border-[1px] border-[var(--sub-text-color)] text-xl font-medium'>Hiện Không có comment nào</div>:
-        currentReplys.map((reply, index)=> {
+        {replys.length ===0 || isLoading? 
+        <div className='flex items-center justify-center w-full min-h-[150px] bg-[var(--sub-bg-color)] border-[1px] border-[var(--sub-text-color)] text-xl font-medium'>Hiện Không có comment nào</div>
+        :currentReplys.map((reply, index)=> {
             const ref = JSON.parse(reply.replyref)
             return (
                 <div key={index} className='flex flex-col md:flex-row text-2xl w-full border-x-[1px] border-t-[1px] bg-[var(--sub-bg-color)] shadow-xl border-[var(--sub-text-color)] last:border-b-[1px] '>

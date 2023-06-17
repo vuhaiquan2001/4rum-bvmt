@@ -160,10 +160,10 @@ function PostBody({post, myRef}) {
                     {Moment(post.ngaytao).format("DD-MM-YYYY")}
                 </div>
                 <div className='flex'>
-                    <div onClick={()=>handleBookmark()} className=' cursor-pointer'>
+                    {post.postclose===0&&<div onClick={()=>handleBookmark()} className=' cursor-pointer'>
                         {bookmark?<BsFillBookmarkCheckFill className='text-[var(--primary-color)]'/>:
                         <FaBookmark className='hover:text-[var(--primary-text-color)] text-[var(--sub-text-color)]'/>}
-                    </div>
+                    </div>}
                     <FaShare className='ml-2 hover:text-[var(--primary-text-color)]'/>
                     {isOwner?<div onMouseLeave={()=>setMenuActice(false)} onMouseEnter={()=>setMenuActice(true)} className={`relative cursor-pointer px-2 ${menuactive? 'text-[var(--primary-text-color)]':'hover:text-[var(--primary-text-color)]'} `}>
                         <FaEllipsisV/>
@@ -176,18 +176,22 @@ function PostBody({post, myRef}) {
             </div>
             <div dangerouslySetInnerHTML={{__html: post.postdesc}} className='w-full py-2 text-lg flex-1'></div>
             <div className='flex h-9 justify-start items-center w-full my-1 text-2xl leading-none text-white bg-[var(--primary-color)] px-2 border-l-4 border-[var(--sub-color)]'>   
-                <div onClick={()=>handleVote()} className='flex hover:text-white hover:text-3xl'>
-                    {vote?<ImArrowUp className='text-[var(--sub-color)]'/>:<ImArrowUp className='text-white'/>}
-                    <span className='text-lg'>{votecount?votecount:post.likequantity}</span>
-                </div>
-                <div onClick={()=>executeScroll()} className='flex ml-4 hover:text-white hover:text-4xl'>
-                    <FaComment/>
-                    <span className='text-lg'>{post.commentquantity}</span>
-                </div>
-
-                <div className='flex ml-4 hover:text-white hover:text-4xl'>
-                    <MdReport/>
-                </div>
+                {post.postclose===0?<>
+                   <div onClick={()=>handleVote()} className='flex hover:text-white hover:text-3xl'>
+                        {vote?<ImArrowUp className='text-[var(--sub-color)]'/>:<ImArrowUp className='text-white'/>}
+                        <span className='text-lg'>{votecount?votecount:post.likequantity}</span>
+                    </div>
+                    <div onClick={()=>executeScroll()} className='flex ml-4 hover:text-white hover:text-4xl'>
+                        <FaComment/>
+                        <span className='text-lg'>{post.commentquantity}</span>
+                    </div>
+    
+                    <div className='flex ml-4 hover:text-white hover:text-4xl'>
+                        <MdReport/>
+                    </div>
+                </>:
+                <span className='text-lg font-medium'>Bài việt hiện đã bị khóa tương tác!</span>
+                }
             </div>
         </div>  
     </div>

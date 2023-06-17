@@ -24,7 +24,7 @@ function UpdatePost() {
     }, [idpost])
 
     useEffect(() => {
-        if(state.users.iduser === post.iduser){
+        if(state.users.iduser === post.iduser||state.users.usertitle==='admin'){
             setOwner(true)
         } else {
             setOwner(false)

@@ -153,48 +153,55 @@ function Post() {
             </a>
           </button>
          </div>
-        : <React.Fragment>
+        :<React.Fragment>
           <PostThumb post={post}/>
           <PostBody post={post} myRef={scrollRef}/>
-          <ReplyBody iduserpost={post.iduser} key={reRender} setreplyupdate={getReplyUpdate} setrerender={setreRender} setdata={getReplyRef} myRef={scrollRef}/>
+          {post.postclose===0&&<ReplyBody iduserpost={post.iduser} key={reRender} setreplyupdate={getReplyUpdate} setrerender={setreRender} setdata={getReplyRef} myRef={scrollRef}/>}
         </React.Fragment>
       }
       {
       state.users.iduser?
       <div key={reRender} className='text-lg my-4 p-2 rounded w-full border-[1px] bg-[var(--primary-color)] shadow-xl' ref={scrollRef}>
-        {replyupdate?
-        <>
-        <div onClick={()=>handleCancel()} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy sửa</div>
-        {JSON.parse(replyupdate.replyref).usernameref&&canreply&&<div className='bg-gray-100 p-1 mb-1 flex'>
-          <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{JSON.parse(replyupdate.replyref).usernameref}</div>
-          <div className='flex flex-1'>: 
-          <div dangerouslySetInnerHTML={{__html: JSON.parse(replyupdate.replyref).contentref}}></div></div>
-          <div onClick={()=>setCanReply(!canreply)} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy reply</div>
-        </div>}
-        <CommentEditor  setdata={getcomment} initdata={replyupdate.replydesc}/>
-          <button
-          onClick={()=>handleUpdate()}
-          className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Cập nhật</button>
+        {post.postclose===0?<>
+          {replyupdate?
+          <>
+            <div onClick={()=>handleCancel()} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy sửa</div>
+            {JSON.parse(replyupdate.replyref).usernameref&&canreply&&<div className='bg-gray-100 p-1 mb-1 flex'>
+              <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{JSON.parse(replyupdate.replyref).usernameref}</div>
+              <div className='flex flex-1'>: 
+              <div dangerouslySetInnerHTML={{__html: JSON.parse(replyupdate.replyref).contentref}}></div></div>
+              <div onClick={()=>setCanReply(!canreply)} className='flex justify-center w-28 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy reply</div>
+            </div>}
+            <CommentEditor  setdata={getcomment} initdata={replyupdate.replydesc}/>
+              <button
+              onClick={()=>handleUpdate()}
+              className='py-2 px-4 mt-3 border-[1px] rounded bg-[#4c760d] hover:bg-[#6a932d]'>Cập nhật</button>
+          </>:
+          <>
+            {replyRef? 
+              <div className='bg-gray-100 p-1 mb-1 flex'>
+              <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{replyRef.username}</div>
+              <div className='flex flex-1'>: 
+              <div dangerouslySetInnerHTML={{__html: replyRef.replydesc}}></div></div>
+              <div onClick={()=>setreplyRef()} className='flex justify-center w-11 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy</div>
+              </div>:<></>
+            }
+              <CommentEditor setdata={getcomment} initdata={false}/>
+              <button
+              onClick={()=>handleSend()}
+              className='py-2 px-4 mt-3 border-[1px] text-white text-lg font-semibold rounded bg-[#4c760d] hover:bg-[#6a932d]'>Gửi</button>
+          </>}
         </>:
-        <>
-        {replyRef? 
-          <div className='bg-gray-100 p-1 mb-1 flex'>
-          <div className='text-lg w-28 whitespace-nowrap overflow-hidden text-ellipsis underline text-blue-600 mr-2'>@{replyRef.username}</div>
-          <div className='flex flex-1'>: 
-          <div dangerouslySetInnerHTML={{__html: replyRef.replydesc}}></div></div>
-          <div onClick={()=>setreplyRef()} className='flex justify-center w-11 px-2 border-[1px] border-gray-200 rounded bg-gray-500 text-gray-50 cursor-pointer'>Hủy</div>
-          </div>:<></>
+        <div className='text-lg flex flex-col items-center my-4 p-2 rounded w-full border-[1px] border-[var(--sub-text-color)] bg-[var(--primary-color)] shadow-xl' ref={scrollRef}>
+          <span className='text-center text-white font-medium'> Bài viết hiện đã bị khóa</span>
+          <Link to={'/forum'} className='text-base underline text-blue-600'>Trở lại diễn đàn</Link>
+        </div>
         }
-          <CommentEditor setdata={getcomment} initdata={false}/>
-          <button
-          onClick={()=>handleSend()}
-          className='py-2 px-4 mt-3 border-[1px] text-white text-lg font-semibold rounded bg-[#4c760d] hover:bg-[#6a932d]'>Gửi</button>
-        </>}
       </div>
         :
       <div className='text-lg flex flex-col items-center my-4 p-2 rounded w-full border-[1px] border-[var(--sub-text-color)] bg-[var(--primary-color)] shadow-xl' ref={scrollRef}>
           <span className='text-center font-medium'> Vui lòng đăng nhập để được bình luận.</span>
-          <Link to={'/login'} className='text-base underline text-blue-900'>Đăng nhập ngay</Link>
+          <Link to={'/login'} className='text-base underline text-blue-600'>Đăng nhập ngay</Link>
       </div>
       }
     </div>

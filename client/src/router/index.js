@@ -37,6 +37,8 @@ const publicRoutes = [
   { path: "*", component: NotFound },
 ];
 
-const privateRoutes = [];
+const privateRoutes = [
+  
+];
 
 export { privateRoutes, publicRoutes };
