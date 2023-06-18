@@ -608,7 +608,6 @@ const connection = mysql.createConnection({
     const sql = "Delete from posts where idpost=?";
     connection.query(sql, id,(err, results) =>{
       if (results){
-        connection
         res.json(results);
       } else {
         res.json({message: err})
@@ -648,6 +647,77 @@ const connection = mysql.createConnection({
     });
   })
   //Chat Ban User
+  app.patch('/api/chatbanuser', (req, res) =>{
+    const {iduser, bool}= req.body;
+    const chatban = bool===1?false:true
+    connection.query('update user_detail set ischatban=? where iduser=?',[chatban, iduser], (err, rs)=>{
+      if(rs.changedRows !==0){
+        res.json(rs)
+      } else {
+        res.json({message: 'Không thể cập nhật'})
+      }
+    })
+  })
+  //Ban User
+  app.patch('/api/banuser', (req, res) =>{
+    const {iduser, bool}= req.body;
+    const ban = bool===1?false:true
+    connection.query('update user_detail set isban=? where iduser=?',[ban, iduser], (err, rs)=>{
+      if(rs.changedRows !==0){
+        res.json(rs)
+      } else {
+        res.json({message: 'Không thể cập nhật'})
+      }
+    })
+  })
+  //Delete User
+  app.delete('/api/deleteuser/:iduser', (req, res) =>{
+    const {iduser}= req.params;
+    connection.query('delete from users where iduser=?',[iduser], (err, rs)=>{
+      if (results){
+        res.json(results);
+      } else {
+        res.json({message: err})
+      }
+    })
+  })
+  //Edit user
+  app.patch('/api/updateuserdetail', (req, res) => {
+    const {iduser, username, userdesc, useravatar, usertitle, usercoverimg}= req.body;
+    const sql = "update user_detail set username=?, userdesc=?, usertitle=?, useravatar=?, usercoverimg=? where iduser=? ";
+    connection.query(sql, [username, userdesc,  usertitle, useravatar, usercoverimg, iduser],(err, results) =>{
+      if(err){
+        res.json({message: err})
+      } else {
+        res.json(results);
+      }
+    });
+  })
+  ////Edit user account
+  app.patch('/api/updateuseraccount', (req, res) => {
+    const {iduser, email, password, newpassword}= req.body;
+    connection.query('select password from users where iduser=?',iduser,(err,rs)=>{
+      if(rs.length>0){
+        bcrypt.compare(password, JSON.parse(JSON.stringify(rs))[0].password).then(function(iscorrect) {
+          if(iscorrect){
+            bcrypt.hash(newpassword, 10).then(hash=>{
+              connection.query('update users set password=?, useremail=? where iduser=?',[hash, email, iduser],(err,rs)=>{
+                if(rs.changedRows !==0){
+                  res.json(rs)
+                } else{
+                  res.json({message: 'Email đã tồn tại hoặc mật khẩu có vấn đề.'})
+                }
+              })
+            })
+          } else{
+            res.json({message: 'Mật cũ khẩu không đúng'})
+          }
+        })
+      } else{
+        res.json({message: 'User không tồn tại'})
+      }
+    })
+  })
   //End User
   //Post
   //Get all post
@@ -685,7 +755,30 @@ const connection = mysql.createConnection({
       }
     });
   })
-
+  //delete reply
+  app.delete('/api/deletereply/:id', (req, res) => {
+    const {id}= req.params;
+    const sql = "Delete from replys where idreply=?";
+    connection.query(sql, id,(err, results) =>{
+      if (results){
+        res.json(results);
+      } else {
+        res.json({message: err})
+      }
+    });
+  })
+  //update reply
+  app.patch('/api/updatereply', (req, res) =>{
+    const {idreply, replydesc}= req.body;
+    console.log(idreply, replydesc)
+    connection.query('update replys set replydesc=? where idreply=?',[replydesc, idreply], (err, rs)=>{
+      if(rs.changedRows !==0){
+        res.json({message: 'OK'})
+      } else {
+        res.json({message: 'NOT OK'})
+      }
+    })
+  })
   //Topic
   //add topic
   app.post('/api/addtopic', (req, res) => {
@@ -723,5 +816,6 @@ const connection = mysql.createConnection({
       }
     });
   })
+
 
 app.listen(4000, () => console.log('App listening on port 4000'));

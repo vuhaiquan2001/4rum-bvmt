@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {memo} from 'react';
+import { useStore } from '../../store';
 import Header from './../../components/header/index';
 import Footer from './../../components/footer/index';
 
 function DefaultLayout({ children }) {
+    const {state,} = useStore()
+    
     return (
     <div className='flex flex-col mt-[56px]'>
         <Header/>
@@ -11,4 +14,4 @@ function DefaultLayout({ children }) {
     </div>)
 }
 
-export default DefaultLayout;
+export default memo(DefaultLayout);

@@ -1,16 +1,19 @@
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { React, Fragment, useState } from "react";
+import { React, Fragment, useState} from "react";
 import { publicRoutes } from "./router";
 import DefaultLayout from "./Layouts/defaultLayout";
 import ScrollToTopBtn from "./components/ScrollButton";
 
 function App() {
+  
   const [yoffset, SetYOffSet] = useState(0)
-  window.onscroll = (e) => {
+
+  window.onscroll = () => {
       SetYOffSet(window.scrollY.toFixed(0))
   }
-
+ 
+  
   return (
     <Router>
       <div className="App"> 

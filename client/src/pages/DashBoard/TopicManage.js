@@ -7,10 +7,13 @@ import DashboardModal from './DashboardModal';
 
 import {IoMdAddCircleOutline} from 'react-icons/io'
 import {RiDeleteBin6Line,RiEditBoxLine} from 'react-icons/ri';
+import {BiSort} from 'react-icons/bi';
 import Moment  from 'moment';
 
 function TopicManage() {
   const [users, setUsers] = useState([])
+  const [SortAble, setSortAble] = useState(false)
+
   const [userloading, setUserLoading] = useState(true)
   const [openModal, setopenModal] = useState(false)
   const [isUpdate, setisUpdate] = useState(false)
@@ -56,13 +59,18 @@ function TopicManage() {
   }, [fetchTopic])
 
   const handleAddTopic = ()=>{
-    const data = {topicname: topicnameRef.current.value, topicfor: topicforRef.current.value}
-    axios.post(`/api/addtopic`, data).then(res=>{
-      setUserLoading(true)
-      fetchTopic();
-      setopenModal(false);
-    })
-    .catch(err=>{console.log(err)})
+    if(topicnameRef.current.value.length < 5 ){
+      console.log(topicnameRef.current.value.length < 5 )
+    } else {
+      console.log(topicnameRef.current.value.length < 5 )
+      const data = {topicname: topicnameRef.current.value, topicfor: topicforRef.current.value}
+      axios.post(`/api/addtopic`, data).then(res=>{
+        setUserLoading(true)
+        fetchTopic();
+        setopenModal(false);
+      })
+      .catch(err=>{console.log(err)})
+    }  
   }
 
   const handleDeleteTopic = (id)=>{
@@ -85,13 +93,18 @@ function TopicManage() {
     })
     .catch(err=>{console.log(err)})
   }
-
+  const handleSort = (status) =>{
+    setSortAble(status)
+  }
   return (
   <>
     {openModal&&<DashboardModal setOpen={setopenModal}
     content={
     isUpdate?
     <div className='flex flex-col'>
+      <article className='flex flex-col my-1 items-center text-xl font-semibold'>
+        <label className='mb-3'>Cập nhật chủ đề</label>
+      </article>
       <article className='flex flex-col my-1'>
         <label className='mb-1'>Tên chủ đề</label>
         <input ref={topicnameRef} defaultValue={isUpdate.topicname} className='border-[1px] border-slate-400 outline-none p-1'/>
@@ -103,10 +116,13 @@ function TopicManage() {
           <option value={'admin'}>Admin</option>
         </select>
       </article>
-      <button onClick={()=>handleUpdateTopic(isUpdate)}>Cập nhật</button>
+      <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={()=>handleUpdateTopic(isUpdate)}>Cập nhật</button>
    </div>
     :
     <div className='flex flex-col'>
+      <article className='flex flex-col my-1 items-center text-xl font-semibold'>
+        <label className='mb-3'>Thêm chủ đề</label>
+      </article>
       <article className='flex flex-col my-1'>
         <label className='mb-1'>Tên chủ đề</label>
         <input ref={topicnameRef} className='border-[1px] border-slate-400 outline-none p-1'/>
@@ -118,7 +134,7 @@ function TopicManage() {
           <option value={'admin'}>Admin</option>
         </select>
       </article>
-      <button onClick={handleAddTopic}>Thêm</button>
+      <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={handleAddTopic}>Thêm</button>
   </div>}
     />}
     {userloading?<div className='w-full h-full animate-pulse'></div>
@@ -141,14 +157,12 @@ function TopicManage() {
                     <span onClick={()=>setopenModal(true)} className='block '><IoMdAddCircleOutline className='text-center text-green-500 m-auto'/></span>
                   </th>
                   {headerGroup.headers.map((column, idx)=>(
-                    <th className='border-[1px] whitespace-nowrap border-gray-500 p-1 text-center' key={idx} {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      
-                        {column.render('header')}
-                        <span className='ml-2'>
-                          {column.isSorted?(column.isSortedDesc? '🔽':'🔼'):''}
-                        </span>
+                    <th className='border-[1px] whitespace-nowrap border-gray-500 p-1 text-center' key={idx} {...column.getHeaderProps(column.getSortByToggleProps(SortAble&&column.getSortByToggleProps()))}>
+                        <div className='flex items-center justify-center'>
+                          {column.render('header')}
+                          {!column.disableSortBy&&<span className='mx-2 font' onMouseEnter={()=>handleSort(true)} onMouseLeave={()=>handleSort(false)}>{column.isSorted?(column.isSortedDesc?'🔽':'🔼'):<BiSort/>}</span>}
+                        </div>
                         <div >{column.canFilter ? column.render('Filter'): null}</div>
-                      
                     </th>
                   ))}
                 </tr>

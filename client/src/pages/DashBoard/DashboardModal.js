@@ -13,8 +13,8 @@ function DashboardModal({setOpen, content}) {
   }
   return (ReactDOM.createPortal(
     <div onClick={()=>setOpen(false)} className='fixed top-0 flex justify-center items-center w-full h-full bg-slate-500 bg-opacity-50'>
-      <div onClick={(e)=>handleOpenModal(e)} className='w-fit min-w-[50%] overflow-y-scroll h-4/5 flex justify-center items-center relative  bg-[var(--primary-bg-color)]'>
-        <span onClick={(e)=>handleCloseModal(e)} className='absolute top-0 right-0'>☒</span>
+      <div onClick={(e)=>handleOpenModal(e)} className='w-fit min-w-[70%] overflow-y-scroll h-4/5 flex justify-center items-center relative  bg-[var(--primary-bg-color)]'>
+        <span onClick={(e)=>handleCloseModal(e)} className='absolute px-2 rounded text-white cursor-pointer bg-red-500 top-2 right-0'>☒</span>
         {content}
       </div>
     </div>

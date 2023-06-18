@@ -1,18 +1,35 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react'
 import axios from "axios";
 import { useTable, useSortBy, useGlobalFilter, useFilters , usePagination} from 'react-table';
 import GlobalFilter from './GlobalFilter';
 import ColumnFilter from './ColumnFilter';
+import DashboardModal from './DashboardModal';
+import DashboardTextEditor from './DashboardTextEditor';
 
 import {AiOutlineLock,AiOutlineUnlock} from 'react-icons/ai';
 import {BiSort} from 'react-icons/bi';
 import {RiDeleteBin6Line,RiEditBoxLine} from 'react-icons/ri';
 import Moment  from 'moment';
 
+import DangerToast from '../../components/toast/dangerToast'
+import SuccessToast from '../../components/toast/successToast'
+
 function PostManager() {
   const [Posts, setPosts] = useState([])
+  const [Post, setPost] = useState()
   const [postloading, setPostLoading] = useState(true)
+  const [isOpen, setisOpen] = useState(false)
   const [SortAble, setSortAble] = useState(false)
+
+  //edit post
+  const [html, sethtml] = useState()
+  const posttitleRef = useRef();
+  const postthumbRef = useRef();
+  const posttagRef = useRef();
+
+  const [isSuccess, setisSuccess]= useState(false);
+  const [isDanger, setisDanger]= useState(false);
+
 
   const data = useMemo(() => Posts.map((post)=> ({...post, ngaytao: Moment(post.ngaytao).format("DD-MM-YYYY"), postupdate:  post.postupdate?Moment(post.postupdate).format("DD-MM-YYYY"):''})), [Posts])
 
@@ -98,6 +115,7 @@ function PostManager() {
       axios.get(`/api/allpost`).then((res) => {
         setPosts(res.data)
         setPostLoading(false)
+        setisOpen(false)
       })
       .catch(err=>{console.log(err)})
     },
@@ -124,20 +142,65 @@ function PostManager() {
     .catch(err=>console.log(err))
   }
 
-  const hanldeEditPost = (row) =>{
-    const data = {idpost: row.idpost, bool: row.postclose}
-    axios.patch(`/api/lockpost`, data).then((res) => {
-      fetchAllPost();
-    })
-    .catch(err=>console.log(err))
+  const hanldeEditPost = (id) =>{
+    console.log(id)
+    if(posttitleRef.current.value === '' || postthumbRef.current.value ===''){
+      setisDanger(true)
+      setTimeout(() => {
+        setisDanger(false)
+      }, 1000); 
+      console.log('vui lòng nhập đầy đủ')
+    } else {
+      const postdata = {
+        posttitle: posttitleRef.current.value,
+        idpost: id,
+        postdesc: html,
+        postthumb: postthumbRef.current.value,
+        tags: posttagRef.current.value,
+      }
+      axios.patch(`/api/updatepost`, postdata)
+        .then(res => {
+          if(res.data.changedRows ===0){
+          console.log(res)
+            setisDanger(true)
+            setTimeout(() => {
+              setisDanger(false)
+            }, 1000); 
+          } else {
+          console.log(res)
+            setisSuccess(true)
+            setTimeout(() => {
+              setisSuccess(false)
+            }, 1000); 
+            fetchAllPost();
+          }
+        })
+    }
   }
-
   const handleSort = (status) =>{
     setSortAble(status)
   }
-
   return (
   <>
+    {isSuccess? <SuccessToast text={'Đăng bài thành công'} /> :<></>}
+    {isDanger? <DangerToast text={'Vui lòng nhập đầy đủ thông tin'} /> :<></>}
+    {isOpen&&<DashboardModal setOpen={setisOpen} content={
+      <main className='h-full mt-16 flex flex-col items-center'>
+        <article className='flex flex-col my-1 items-center text-xl font-semibold'>
+        <label className='mb-3'>Cập nhật bài viết</label>
+      </article>
+        <div className='mb-2 flex flex-col lg:flex-row items-center justify-between'>
+          <div className='flex flex-col lg:flex-row'>
+            <div className='mr-2 '><input ref={posttitleRef} type='text' defaultValue={Post.posttitle} className='rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200'  placeholder='Nhập tiêu đề bài viết'/></div>
+            <div className='mr-2'><input ref={postthumbRef} type='text' defaultValue={Post.postthumb} className='mt-1 lg:mt-0 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200' placeholder='Nhập link ảnh thumbnail'/></div>
+            <div className='mr-2'><input ref={posttagRef} type='text' defaultValue={Post.tags} className='mt-1 lg:mt-0 rounded text-base p-1 bg-[#7cb526] border-[1px] border-green-300 text-gray-100 placeholder:text-gray-200'  placeholder='Split by ,' /></div>
+          </div>
+        </div>
+        <DashboardTextEditor gethtml={sethtml} post={Post}/>
+        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={e=>hanldeEditPost(Post.idpost)}>Cập nhật bài viết</button>
+      </main>
+    }/>}
+
     {postloading?<div></div>
     :<>
       <div className='text-2xl w-full mb-4 p-2 border-y-[1px] border-r-[1px] border-l-8 border-[var(--sub-color)] bg-[var(--primary-color)] shadow-lg shadow-gray-300'>
@@ -178,7 +241,9 @@ function PostManager() {
                       {row.original.postclose === 0?<span onClick={()=>hanldeLockPost(row.original)} className='whitespace-nowrap block py-1'><AiOutlineLock className='text-center text-red-600 m-auto'/></span>
                       :<span onClick={()=>hanldeLockPost(row.original)} className='whitespace-nowrap block py-1'><AiOutlineUnlock className='text-center text-green-600 m-auto'/></span>
                       }
-                      <span onClick={()=>hanldeEditPost(row.original)} className='whitespace-nowrap block py-1'><RiEditBoxLine className='text-center text-blue-500 m-auto'/></span>
+                      <span onClick={()=>{setisOpen(true)
+                        setPost(row.original)
+                      }} className='whitespace-nowrap block py-1'><RiEditBoxLine className='text-center text-blue-500 m-auto'/></span>
                     </td>
                     {row.cells.map((cell, idx)=>(
                       <td className='border-[1px] border-gray-500 border-collapse p-1 text-center' key={idx} {...cell.getCellProps()}>

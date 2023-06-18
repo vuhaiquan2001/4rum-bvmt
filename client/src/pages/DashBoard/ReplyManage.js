@@ -1,16 +1,27 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react'
 import axios from "axios";
 import { useTable, useSortBy, useGlobalFilter, useFilters , usePagination} from 'react-table';
 import GlobalFilter from './GlobalFilter';
 import ColumnFilter from './ColumnFilter';
+import DashboardModal from './DashboardModal';
+import DashboardTextEditor from './DashboardTextEditor';
 
-import {AiOutlineLock,AiOutlineUnlock} from 'react-icons/ai';
 import {RiDeleteBin6Line,RiEditBoxLine} from 'react-icons/ri';
+import {BiSort} from 'react-icons/bi';
 import Moment  from 'moment';
+import DangerToast from '../../components/toast/dangerToast'
+import SuccessToast from '../../components/toast/successToast'
 
 function ReplyManager() {
   const [replys, setPosts] = useState([])
   const [postloading, setPostLoading] = useState(true)
+  const [SortAble, setSortAble] = useState(false)
+
+  const [isOpen, setisOpen] = useState(false)
+  const [Reply, setReply] = useState()
+  const [html, sethtml] = useState()
+  const [isSuccess, setisSuccess]= useState(false);
+  const [isDanger, setisDanger]= useState(false);
 
   const data = useMemo(() => replys.map((reply)=> ({...reply, replyref: JSON.parse(reply.replyref), replydate: Moment(reply.replydate).format("DD-MM-YYYY"), replyupdate:  reply.replyupdate?Moment(reply.replyupdate).format("DD-MM-YYYY"):''})), [replys])
   const columns = useMemo(() => [{
@@ -69,6 +80,7 @@ function ReplyManager() {
       axios.get(`/api/allreply`).then((res) => {
         setPosts(res.data)
         setPostLoading(false)
+        setisOpen(false)
       })
       .catch(err=>{console.log(err)})
     },
@@ -79,34 +91,51 @@ function ReplyManager() {
     fetchAllReply();
   }, [fetchAllReply])
   
-  const hanldeDeletePost = (data) =>{
-    const answer = window.confirm("Tất cả dữ liệu liên quan đến bài viết đều biến mất");
+  const hanldeDeleteReply = (data) =>{
+    const answer = window.confirm("Tất cả dữ liệu liên quan đến bình luận đều biến mất");
     if (answer) {
-    axios.delete(`/api/deletepost/${data}`).then((res) => {
+    axios.delete(`/api/deletereply/${data}`).then((res) => {
       fetchAllReply();
     })
     .catch(err=>console.log(err))}
   }
-  const hanldeLockPost = (row) =>{
-    const data = {idpost: row.idpost, bool: row.postclose}
-    axios.patch(`/api/lockpost`, data).then((res) => {
-      fetchAllReply();
+
+  const hanldeEditReply = (row) =>{
+    const data = {idreply: row.idreply, replydesc: html}
+    axios.patch(`/api/updatereply`, data).then((res) => {
+      if(res.data.message === 'OK'){
+        setisSuccess(true)
+        setTimeout(() => {
+          setisSuccess(false)
+          fetchAllReply();
+        }, 1000);
+      } else {
+        setisDanger(true)
+        setTimeout(() => {
+          setisDanger(false)
+        }, 1000);
+      }
     })
     .catch(err=>console.log(err))
   }
 
-  const hanldeEditPost = (row) =>{
-    const data = {idpost: row.idpost, bool: row.postclose}
-    axios.patch(`/api/lockpost`, data).then((res) => {
-      fetchAllReply();
-    })
-    .catch(err=>console.log(err))
+  const handleSort = (status) =>{
+    setSortAble(status)
   }
-
-
-
   return (
   <>
+    {isSuccess? <SuccessToast text={'Cập nhật bình luận thành công'} /> :<></>}
+    {isDanger? <DangerToast text={'Vui lòng nhập đầy đủ thông tin'} /> :<></>}
+    {isOpen&&<DashboardModal setOpen={setisOpen} content={
+      <main className='h-full mt-16 flex flex-col items-center'>
+        <article className='flex flex-col my-1 items-center text-xl font-semibold'>
+        <label className='mb-3'>Cập nhật bình luận ID:{Reply.idreply}</label>
+      </article>
+        
+        <DashboardTextEditor gethtml={sethtml} post={Reply}/>
+        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={e=>hanldeEditReply(Reply)}>Cập nhật bài viết</button>
+      </main>
+    }/>}
     {postloading?<div></div>
     :<>
       <div className='text-2xl w-full mb-4 p-2 border-y-[1px] border-r-[1px] border-l-8 border-[var(--sub-color)] bg-[var(--primary-color)] shadow-lg shadow-gray-300'>
@@ -124,14 +153,12 @@ function ReplyManager() {
                 <tr className='border-collapse' key={idx} {...headerGroups.getHeaderGroupProps}>
                   <th className='border-[1px] border-collapse h-full border-gray-500 p-1'>Action</th>
                   {headerGroup.headers.map((column, idx)=>(
-                    <th className='border-[1px] whitespace-nowrap border-gray-500 p-1' key={idx} {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      
-                        {column.render('header')}
-                        <span className='ml-2'>
-                          {column.isSorted?(column.isSortedDesc? '🔽':'🔼'):''}
-                        </span>
-                        <div >{column.canFilter ? column.render('Filter'): null}</div>
-                      
+                    <th className='border-[1px] whitespace-nowrap border-gray-500 p-1' key={idx} {...column.getHeaderProps(SortAble&&column.getSortByToggleProps())}>
+                      <div className='flex items-center justify-center'>
+                          {column.render('header')}
+                          {!column.disableSortBy&&<span className='mx-2 font' onMouseEnter={()=>handleSort(true)} onMouseLeave={()=>handleSort(false)}>{column.isSorted?(column.isSortedDesc?'🔽':'🔼'):<BiSort/>}</span>}
+                      </div>
+                      <div >{column.canFilter ? column.render('Filter'): null}</div>
                     </th>
                   ))}
                 </tr>
@@ -145,11 +172,9 @@ function ReplyManager() {
                 return (
                   <tr className='border-collapse' key={idx} {...row.getRowProps()}>
                     <td className='border-[1px] border-gray-500 p-1 '>
-                      <span onClick={()=>hanldeDeletePost(row.original.idpost)} className='whitespace-nowrap block py-1'><RiDeleteBin6Line className='text-center text-red-600 m-auto'/></span>
-                      {row.original.postclose === 0?<span onClick={()=>hanldeLockPost(row.original)} className='whitespace-nowrap block py-1'><AiOutlineLock className='text-center text-red-600 m-auto'/></span>
-                      :<span onClick={()=>hanldeLockPost(row.original)} className='whitespace-nowrap block py-1'><AiOutlineUnlock className='text-center text-green-600 m-auto'/></span>
-                      }
-                      <span onClick={()=>hanldeEditPost(row.original)} className='whitespace-nowrap block py-1'><RiEditBoxLine className='text-center text-blue-500 m-auto'/></span>
+                      <span onClick={()=>hanldeDeleteReply(row.original.idreply)} className='whitespace-nowrap block py-1'><RiDeleteBin6Line className='text-center text-red-600 m-auto'/></span>
+                     
+                      <span onClick={()=>{setisOpen(true); setReply(row.original)}} className='whitespace-nowrap block py-1'><RiEditBoxLine className='text-center text-blue-500 m-auto'/></span>
                     </td>
                     {row.cells.map((cell, idx)=>(
                       <td className='border-[1px] border-gray-500 border-collapse p-1 text-center' key={idx} {...cell.getCellProps()}>
