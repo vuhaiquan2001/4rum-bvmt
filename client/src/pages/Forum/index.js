@@ -3,9 +3,10 @@ import ThreadList from "../../components/ThreadList.js/index.js";
 import axios from "axios";
 import SideBar from "../../components/sideBar/index.js";
 
+
+
 function Forum() {
   const [topics, setTopics] = useState([]);
-
   useEffect(() => {
     const controller = new AbortController();
     axios.get('/api/topics',{signal: controller.signal}).then((response) => {

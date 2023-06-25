@@ -133,7 +133,7 @@ function ReplyManager() {
       </article>
         
         <DashboardTextEditor gethtml={sethtml} post={Reply}/>
-        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={e=>hanldeEditReply(Reply)}>Cập nhật bài viết</button>
+        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 text-white font-medium' onClick={e=>hanldeEditReply(Reply)}>Cập nhật</button>
       </main>
     }/>}
     {postloading?<div></div>

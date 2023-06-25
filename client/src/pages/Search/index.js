@@ -131,7 +131,7 @@ function Search() {
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
             {posts.length<=0?
-           <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+           <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-[var(--primary-text-color)]'>
             Bài viết không tồn tại <img src={icons.pepeSad} alt='pepe'/>
            </div>
            :<>
@@ -156,7 +156,7 @@ function Search() {
         <div className='flex flex-col justify-between flex-1'>
           <div className='flex flex-col w-full px-2 my-4 select-none'>
             {posts.length<=0?
-            <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-yellow-50'>
+            <div className='flex flex-col w-full min-h-[50vh] justify-center items-center text-xl font-semibold text-[var(--primary-text-color)]'>
               Người dùng này không tồn tại <img src={icons.pepeSad} alt='pepe'/>
             </div>:
            <>

@@ -28,7 +28,14 @@ function UserManager() {
 
   const data = useMemo(() => users.map((user)=> ({...user, joindate: Moment(user.joindate).format("DD-MM-YYYY") })), [users])
 
-  const columns = useMemo(() => [{
+  const columns = useMemo(() => [
+    {
+      header: 'Cấm tài khoản',
+      accessor: 'isban',
+      Cell: ({value})=>{return <span>{value===0?'Không cấm': 'Cấm'}</span>},
+      Filter: ColumnFilter,
+      disableFilters: true
+    },{
     header: 'Mã người dùng',
     accessor: 'iduser',
     Filter: ColumnFilter
@@ -60,15 +67,9 @@ function UserManager() {
     Filter: ColumnFilter,
     disableFilters: true
   },{
-    header: 'Cấm chat',
+    header: 'Cấm bình luận',
     accessor: 'ischatban',
     Cell: ({value})=>{return <span className='whitespace-nowrap'>{value===0?'Không cấm': 'Cấm'}</span>},
-    Filter: ColumnFilter,
-    disableFilters: true
-  },{
-    header: 'Cấm tài khoản',
-    accessor: 'isban',
-    Cell: ({value})=>{return <span>{value===0?'Không cấm': 'Cấm'}</span>},
     Filter: ColumnFilter,
     disableFilters: true
   },
@@ -136,7 +137,7 @@ function UserManager() {
 
   const handleDeleteUser = (id) =>{
     setactionLoading(true)
-    const answer = window.confirm("Tất cả dữ liệu liên quan đến người dùng đều biến mất!");
+    const answer = window.confirm(`Xóa người dùng có Id:${id}? Tất cả dữ liệu liên quan đến người dùng đều biến mất!`);
     if (answer) {
       axios.delete(`/api/deleteuser/${id}`).then((res) => {
         fetchAllUser()
@@ -194,7 +195,8 @@ const handleErrCover= ()=>{
               <AiFillCamera/>
             </div>
           </div>
-          <div onClick={handleCoverImg} className='absolute flex justify-center items-center w-fit p-1 leading-none h-6 right-2 md:right-2  bottom-0 -translate-y-1/2 rounded-full bg-black hover:bg-gray-600 text-gray-200 text-center'><span className='hidden md:flex'>Cài đặt ảnh bìa</span><AiFillCamera className='ml-1'/></div>
+          <div onClick={handleCoverImg} className='absolute flex justify-center items-center w-fit p-1 leading-none h-6 right-2 md:right-2  bottom-0 -translate-y-1/2 rounded-full bg-black hover:bg-gray-600 text-gray-200 text-center'>
+            <span className='hidden md:flex'>Cài đặt ảnh bìa</span><AiFillCamera className='ml-1'/></div>
         </article>
         <article className='flex flex-col my-1 w-full'>
           <label className='mb-1'>Tên người dùng</label>
@@ -211,7 +213,7 @@ const handleErrCover= ()=>{
           <label className='mb-1'>Mô tả người dùng</label>
           <textarea ref={userdescref} defaultValue={User.userdesc} className='border-[1px] border-slate-400 outline-none p-1'/>
         </article>
-        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 mb-3 text-white font-medium' onClick={e=>hanldeEditUser(User.idpost)}>Cập nhật bài viết</button>
+        <button className='px-2 py-1 bg-green-500 hover:bg-green-400 mt-1 mb-3 text-white font-medium' onClick={e=>hanldeEditUser(User.idpost)}>Cập nhật</button>
       </main>
     }/>}
     {userloading?<div></div>
@@ -294,7 +296,7 @@ const handleErrCover= ()=>{
         </div>
         <div className='flex items-center mx-1'>
               Đi tới trang
-              <input 
+              <input            
               onChange={(e)=>{
                 const pageNumber = e.target.value;
                 pageNumber>0?(pageNumber>pageOptions.length-1?gotoPage(pageOptions.length-1):gotoPage(pageNumber-1)):(gotoPage(0))

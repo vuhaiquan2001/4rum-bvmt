@@ -674,10 +674,11 @@ const connection = mysql.createConnection({
   app.delete('/api/deleteuser/:iduser', (req, res) =>{
     const {iduser}= req.params;
     connection.query('delete from users where iduser=?',[iduser], (err, rs)=>{
-      if (results){
-        res.json(results);
-      } else {
         res.json({message: err})
+      if (err){
+        res.json({message: err})
+      } else {
+        res.json(rs);
       }
     })
   })

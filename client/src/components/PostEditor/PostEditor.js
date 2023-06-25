@@ -134,7 +134,7 @@ const PostEditor = () => {
       {openPreview? 
       <div>
         <ThumEditor thumbData={obj}/>
-        <div dangerouslySetInnerHTML={{__html: html}} className='bg-[#83cc15] p-2'></div>
+        <div dangerouslySetInnerHTML={{__html: html}} className='bg-[var(--sub-bg-color)] p-2'></div>
       </div> 
       :<div>
         <MenuBar editor={editor} className='bg-white '/>
